@@ -1,0 +1,11 @@
+site: palette-contrast-checker
+
+build:
+  output: .
+
+deploy:
+  ignore:
+    - "*.map"
+    - "node_modules/**"
+    - ".git/**"
+    - ".env*"
