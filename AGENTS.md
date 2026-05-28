@@ -1,3 +1,5 @@
+The file `/palette-contrast-checker/CLAUDE.md` must be updated as the app status changes so that the infos in it are based on the current status of the app.
+
 # Palette Contrast Checker
 
 Browser-based accessibility tool that evaluates color palettes against WCAG 2.2 contrast standards. Static frontend-only app deployed to GitHub Pages.
