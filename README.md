@@ -1,5 +1,7 @@
 # Palette Contrast Checker
 
+**Live:** https://palette-contrast-checker.freecode.camp
+
 A browser-based tool that evaluates color palettes for WCAG 2.2 accessibility. Enter colors in any common CSS format, and the app automatically analyzes every foreground/background combination for contrast compliance.
 
 ## Features
@@ -40,4 +42,4 @@ npm run test:watch  # watch mode
 - CSS custom properties (freeCodeCamp "Command-line Chic" design system)
 - Vitest for unit testing
 - No framework, no build step for production
-- Deployable as static files to GitHub Pages
+- Deployed as static files to the freeCodeCamp Universe platform
