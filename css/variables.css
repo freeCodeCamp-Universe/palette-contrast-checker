@@ -34,7 +34,7 @@
   --text-primary: var(--gray-00);
   --text-secondary: var(--gray-05);
   --text-tertiary: var(--gray-10);
-  --text-muted: var(--gray-45);
+  --text-muted: #a0a0ad;
 
   --color-cta: var(--yellow-gold);
   --color-cta-text: var(--gray-90);

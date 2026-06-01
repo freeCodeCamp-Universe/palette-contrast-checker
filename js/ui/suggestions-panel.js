@@ -24,7 +24,7 @@ export function initSuggestionsPanel(store) {
     section.hidden = false;
     grid.innerHTML = '';
     selected.clear();
-    addBtn.disabled = true;
+    addBtn.setAttribute('aria-disabled', 'true');
 
     const darkCol = createColumn('Dark suggestions', suggestions.dark);
     const lightCol = createColumn('Light suggestions', suggestions.light);
@@ -52,7 +52,7 @@ export function initSuggestionsPanel(store) {
           selected.delete(item.hex);
           el.classList.remove('selected');
         }
-        addBtn.disabled = selected.size === 0;
+        addBtn.setAttribute('aria-disabled', String(selected.size === 0));
       });
 
       const swatch = document.createElement('span');
@@ -79,7 +79,7 @@ export function initSuggestionsPanel(store) {
   }
 
   addBtn.addEventListener('click', () => {
-    if (selected.size === 0) return;
+    if (addBtn.getAttribute('aria-disabled') === 'true') return;
 
     const suggestions = [];
     for (const hex of selected) {

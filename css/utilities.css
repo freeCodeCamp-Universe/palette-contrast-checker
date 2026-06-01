@@ -35,3 +35,21 @@
 [hidden] {
   display: none !important;
 }
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-md);
+  background: var(--primary-bg);
+  color: var(--text-primary);
+  padding: var(--space-sm) var(--space-md);
+  border: 2px solid var(--focus-outline);
+  border-radius: var(--border-radius);
+  font-weight: 700;
+  text-decoration: none;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: var(--space-sm);
+}

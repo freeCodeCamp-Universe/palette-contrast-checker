@@ -79,12 +79,18 @@ export function initPaletteEditor(store) {
     if (!message) {
       validation.textContent = '';
       validation.className = 'color-validation';
+      input.removeAttribute('aria-invalid');
       return;
     }
     validation.textContent = message;
     validation.className = isError
       ? 'color-validation form-error'
       : 'color-validation color-preview-inline';
+    if (isError) {
+      input.setAttribute('aria-invalid', 'true');
+    } else {
+      input.removeAttribute('aria-invalid');
+    }
   }
 
   // Live validation preview
@@ -154,9 +160,9 @@ export function initPaletteEditor(store) {
             : ''}
         </div>
         <div class="palette-item-actions">
-          <button class="btn-icon move-up-btn" title="Move up" aria-label="Move ${escapeHtml(color.displayLabel)} up" ${color.position === 0 ? 'disabled' : ''}>&#9650;</button>
-          <button class="btn-icon move-down-btn" title="Move down" aria-label="Move ${escapeHtml(color.displayLabel)} down" ${color.position === palette.length - 1 ? 'disabled' : ''}>&#9660;</button>
-          <button class="btn-icon delete-btn" title="Remove" aria-label="Remove ${escapeHtml(color.displayLabel)}">&#10005;</button>
+          <button class="btn-icon move-up-btn" title="Move up" aria-label="Move ${escapeHtml(color.displayLabel)} up" ${color.position === 0 ? 'disabled' : ''}><span aria-hidden="true">&#9650;</span></button>
+          <button class="btn-icon move-down-btn" title="Move down" aria-label="Move ${escapeHtml(color.displayLabel)} down" ${color.position === palette.length - 1 ? 'disabled' : ''}><span aria-hidden="true">&#9660;</span></button>
+          <button class="btn-icon delete-btn" title="Remove" aria-label="Remove ${escapeHtml(color.displayLabel)}"><span aria-hidden="true">&#10005;</span></button>
         </div>
       `;
 
@@ -185,7 +191,7 @@ export function initPaletteEditor(store) {
 
     // Enable/disable analyze button
     const analyzeBtn = document.getElementById('analyze-btn');
-    analyzeBtn.disabled = palette.length < 2;
+    analyzeBtn.setAttribute('aria-disabled', String(palette.length < 2));
   }
 
   store.subscribe(render);

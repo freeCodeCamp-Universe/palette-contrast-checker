@@ -3,12 +3,14 @@
  */
 
 import { generateId } from '../state/actions.js';
+import { trapFocus } from '../lib/focus-trap.js';
 
 export function initDuplicateResolver(store, mergeInfo) {
   const modal = document.getElementById('merge-modal');
   const desc = document.getElementById('merge-modal-desc');
   const options = document.getElementById('merge-modal-options');
   const cancelBtn = document.getElementById('merge-cancel-btn');
+  const trigger = document.activeElement;
 
   desc.textContent = `The color ${mergeInfo.newHex} already exists in your palette. Choose which label to keep:`;
 
@@ -26,6 +28,14 @@ export function initDuplicateResolver(store, mergeInfo) {
     seen.add(c.label);
     return true;
   });
+
+  let removeTrap;
+
+  function close() {
+    modal.hidden = true;
+    removeTrap?.();
+    trigger?.focus();
+  }
 
   for (const choice of uniqueChoices) {
     const btn = document.createElement('button');
@@ -45,26 +55,17 @@ export function initDuplicateResolver(store, mergeInfo) {
           chosenLabel: choice.label,
         },
       });
-      modal.hidden = true;
+      close();
     });
 
     options.appendChild(btn);
   }
 
-  cancelBtn.onclick = () => {
-    modal.hidden = true;
-  };
+  cancelBtn.onclick = close;
 
   modal.hidden = false;
-
-  // Close on Escape
-  const onKeydown = (e) => {
-    if (e.key === 'Escape') {
-      modal.hidden = true;
-      document.removeEventListener('keydown', onKeydown);
-    }
-  };
-  document.addEventListener('keydown', onKeydown);
+  removeTrap = trapFocus(modal, close);
+  (modal.querySelector('#merge-modal-options button') ?? cancelBtn).focus();
 }
 
 function escapeHtml(str) {

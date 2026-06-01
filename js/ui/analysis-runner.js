@@ -69,7 +69,10 @@ export function initAnalysisRunner(store) {
     }, 10);
   }
 
-  analyzeBtn.addEventListener('click', runAnalysis);
+  analyzeBtn.addEventListener('click', () => {
+    if (analyzeBtn.getAttribute('aria-disabled') === 'true') return;
+    runAnalysis();
+  });
   analyzeAnywayBtn.addEventListener('click', () => {
     pendingAnalysis = true;
     runAnalysis();

@@ -2,6 +2,7 @@
  * Storage panel — save/load palettes, import/export CSV, share URL.
  */
 
+import { trapFocus } from '../lib/focus-trap.js';
 import {
   saveNamedPalette,
   loadNamedPalette,
@@ -41,6 +42,15 @@ export function initStoragePanel(store) {
   const overwriteConfirm = document.getElementById('overwrite-confirm-btn');
 
   let pendingOverwriteName = null;
+  let overwriteTrigger = null;
+  let removeOverwriteTrap = null;
+
+  function closeOverwriteModal() {
+    overwriteModal.hidden = true;
+    removeOverwriteTrap?.();
+    removeOverwriteTrap = null;
+    overwriteTrigger?.focus();
+  }
 
   // Save palette
   saveBtn.addEventListener('click', () => {
@@ -61,6 +71,7 @@ export function initStoragePanel(store) {
     if (paletteNameExists(name)) {
       const existing = getExistingPalette(name);
       pendingOverwriteName = name;
+      overwriteTrigger = document.activeElement;
       overwriteDesc.textContent = `A palette named "${name}" already exists with ${existing.colors.length} colors.`;
       overwritePreview.innerHTML = existing.colors
         .map(
@@ -69,6 +80,8 @@ export function initStoragePanel(store) {
         )
         .join('');
       overwriteModal.hidden = false;
+      removeOverwriteTrap = trapFocus(overwriteModal, closeOverwriteModal);
+      overwriteCancel.focus();
       return;
     }
 
@@ -80,12 +93,12 @@ export function initStoragePanel(store) {
       doSave(pendingOverwriteName);
       pendingOverwriteName = null;
     }
-    overwriteModal.hidden = true;
+    closeOverwriteModal();
   });
 
   overwriteCancel.addEventListener('click', () => {
     pendingOverwriteName = null;
-    overwriteModal.hidden = true;
+    closeOverwriteModal();
   });
 
   function doSave(name) {
@@ -100,7 +113,10 @@ export function initStoragePanel(store) {
   loadBtn.addEventListener('click', () => {
     loadDialog.hidden = !loadDialog.hidden;
     saveDialog.hidden = true;
-    if (!loadDialog.hidden) renderLoadList();
+    if (!loadDialog.hidden) {
+      renderLoadList();
+      loadList.querySelector('.load-btn')?.focus();
+    }
   });
 
   function renderLoadList() {
