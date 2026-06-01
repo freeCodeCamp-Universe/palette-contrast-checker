@@ -37,9 +37,15 @@
 
 .save-dialog {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-sm);
   align-items: flex-end;
   margin-top: var(--space-md);
+}
+
+.save-dialog .form-group {
+  flex: 1;
+  min-width: 180px;
 }
 
 .save-dialog .form-input {
