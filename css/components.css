@@ -61,9 +61,17 @@
   line-height: 1;
 }
 
-.btn-icon:hover {
+.btn-icon:hover:not(:disabled) {
   color: var(--text-primary);
   background: var(--surface-bg);
+}
+
+.btn-icon:disabled,
+.btn-icon[disabled] {
+  opacity: 0.4;
+  /* Native `disabled` already blocks clicks; omit pointer-events:none so the
+     not-allowed cursor still shows on hover. */
+  cursor: not-allowed;
 }
 
 /* === Forms === */
