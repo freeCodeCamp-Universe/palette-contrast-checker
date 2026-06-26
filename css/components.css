@@ -217,6 +217,11 @@ input[type="range"] {
 
 /* === Modal === */
 
+/* Prevent the background page from scrolling while a modal is open. */
+body.modal-open {
+  overflow: hidden;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
