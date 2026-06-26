@@ -135,6 +135,12 @@ select.form-input {
   appearance: auto;
 }
 
+textarea.form-input {
+  resize: vertical;
+  min-height: 3.5rem;
+  line-height: var(--line-height-base);
+}
+
 /* === Range Slider === */
 
 input[type="range"] {
