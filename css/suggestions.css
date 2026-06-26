@@ -38,6 +38,10 @@
 .suggestion-info {
   flex: 1;
   min-width: 0;
+  /* Stack hex, type and "Pairs with" each on their own line. */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .suggestion-hex {
