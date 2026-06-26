@@ -6,7 +6,7 @@
 import { createStore } from '../state/store.js';
 import { reducer, getInitialState, generateId, resetIdCounter } from '../state/actions.js';
 import { loadWip, loadPreferences } from '../state/persistence.js';
-import { decodePaletteFromHash, encodePaletteToHash } from '../lib/palette-url.js';
+import { decodePaletteFromHash } from '../lib/palette-url.js';
 import { initPaletteEditor } from './palette-editor.js';
 import { initAnalysisRunner } from './analysis-runner.js';
 import { initResultsView } from './results-view.js';
@@ -41,15 +41,9 @@ export function initApp() {
 
   store = createStore(reducer, initialState);
 
-  // Keep the URL hash in sync with the palette: any palette state is shareable
-  // and survives a reload. replaceState does not fire hashchange, so this does
-  // not loop with the hashchange listener below.
-  let lastPalette = store.getState().palette;
-  store.subscribe((state) => {
-    if (state.palette === lastPalette) return;
-    lastPalette = state.palette;
-    history.replaceState(null, '', encodePaletteToHash(state.palette) || window.location.pathname);
-  });
+  // The URL hash represents an *analyzed* palette and is written only by the
+  // Analyze action (see analysis-runner). Loading a #p= URL therefore fills the
+  // colors and analyzes them; Load Palette / Restore just fill the colors.
 
   // Load a #p=... palette from the URL hash (returns true if one was loaded).
   function loadPaletteFromHash(hash) {
@@ -122,9 +116,8 @@ function initRecoveryBanner(wipPalette) {
     store.dispatch({ type: 'LOAD_PALETTE', payload: wipPalette });
     store.dispatch({ type: 'SET_RECOVERY_AVAILABLE', payload: false });
     banner.hidden = true;
-    // Restoring loads a palette (and updates the URL), so analyze it too — the
-    // same behaviour as importing a palette from a #p= URL.
-    triggerAnalyze();
+    // Restore only fills the colors; the user runs Analyze when ready (which is
+    // what writes the URL).
   });
 
   dismissBtn.addEventListener('click', () => {

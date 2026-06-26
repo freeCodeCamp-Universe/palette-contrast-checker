@@ -4,6 +4,7 @@ import { loadAppDom, resetLocalStorage } from '../helpers/dom.js';
 import { createStore } from '../../js/state/store.js';
 import { reducer, getInitialState } from '../../js/state/actions.js';
 import { initAnalysisRunner } from '../../js/ui/analysis-runner.js';
+import { decodePaletteFromHash } from '../../js/lib/palette-url.js';
 
 function makeStore() {
   return createStore(reducer, getInitialState());
@@ -34,6 +35,24 @@ describe('analysis runner', () => {
 
     await vi.waitFor(() => expect(store.getState().results).not.toBeNull());
     expect(store.getState().results.length).toBe(2);
+  });
+
+  it('writes the analyzed palette to the URL hash on Analyze', () => {
+    history.replaceState(null, '', '/');
+    const store = makeStore();
+    initAnalysisRunner(store);
+    addColor(store, '1', '#000000');
+    addColor(store, '2', '#aa11aa');
+
+    const analyzeBtn = document.getElementById('analyze-btn');
+    analyzeBtn.setAttribute('aria-disabled', 'false');
+    analyzeBtn.click();
+
+    expect(window.location.hash).toMatch(/^#p=/);
+    expect(decodePaletteFromHash(window.location.hash).map((c) => c.hex)).toEqual([
+      '#000000',
+      '#aa11aa',
+    ]);
   });
 
   it('shows the >10-color warning and clears it when colors drop to 10 or fewer', () => {

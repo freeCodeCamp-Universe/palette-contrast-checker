@@ -6,6 +6,7 @@ import { analyzeAllPairs, findMissingCoverage } from '../lib/contrast.js';
 import { findDuplicateGroups } from '../lib/duplicates.js';
 import { saveWip } from '../state/persistence.js';
 import { generateSuggestions } from '../lib/suggestions.js';
+import { encodePaletteToHash } from '../lib/palette-url.js';
 
 export function initAnalysisRunner(store) {
   const analyzeBtn = document.getElementById('analyze-btn');
@@ -39,6 +40,11 @@ export function initAnalysisRunner(store) {
 
     warning.hidden = true;
     pendingAnalysis = false;
+
+    // The URL hash is written only here, on Analyze, so it always reflects an
+    // analyzed palette (Load/Restore/edits leave it untouched).
+    history.replaceState(null, '', encodePaletteToHash(palette) || window.location.pathname);
+
     store.dispatch({ type: 'SET_ANALYSIS_RUNNING', payload: true });
 
     // Use setTimeout to avoid blocking the UI
