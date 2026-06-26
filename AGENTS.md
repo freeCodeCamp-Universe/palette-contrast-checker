@@ -2,19 +2,19 @@ The file `/palette-contrast-checker/CLAUDE.md` must be updated as the app status
 
 # Palette Contrast Checker
 
-Browser-based accessibility tool that evaluates color palettes against WCAG 2.2 contrast standards. Static frontend-only app deployed to GitHub Pages.
+Browser-based accessibility tool that evaluates color palettes against WCAG 2.2 contrast standards. Static frontend-only app deployed to freeCodeCamp Universe.
 
 ## Tech Stack
 
 - Vanilla JavaScript (ES modules), no framework, no build step
 - CSS with custom properties (freeCodeCamp "Command-line Chic" design system)
-- Vitest for testing
-- Deployed via GitHub Actions to GitHub Pages
+- Vitest (+ jsdom) for testing
+- Deployed manually to freeCodeCamp Universe via the `universe` CLI (no auto-deploy on push)
 
 ## Commands
 
 ```bash
-npm install          # install dev deps (vitest only)
+npm install          # install dev deps (vitest + jsdom)
 npm test             # run tests once
 npm run test:watch   # watch mode
 npx serve .          # local dev server (or just open index.html)
