@@ -6,6 +6,7 @@ import { parseColor, canonicalize, identifyFormat } from '../lib/color-parse.js'
 import { findDuplicate } from '../lib/duplicates.js';
 import { generateId } from '../state/actions.js';
 import { initDuplicateResolver } from './duplicate-resolver.js';
+import { chevronUp, chevronDown, close } from '../lib/icons.js';
 
 export function initPaletteEditor(store) {
   const input = document.getElementById('color-input');
@@ -160,9 +161,9 @@ export function initPaletteEditor(store) {
             : ''}
         </div>
         <div class="palette-item-actions">
-          <button class="btn-icon move-up-btn" title="Move up" aria-label="Move ${escapeHtml(color.displayLabel)} up" ${color.position === 0 ? 'disabled' : ''}><span aria-hidden="true">&#9650;</span></button>
-          <button class="btn-icon move-down-btn" title="Move down" aria-label="Move ${escapeHtml(color.displayLabel)} down" ${color.position === palette.length - 1 ? 'disabled' : ''}><span aria-hidden="true">&#9660;</span></button>
-          <button class="btn-icon delete-btn" title="Remove" aria-label="Remove ${escapeHtml(color.displayLabel)}"><span aria-hidden="true">&#10005;</span></button>
+          <button class="btn-icon move-up-btn" title="Move up" aria-label="Move ${escapeHtml(color.displayLabel)} up" ${color.position === 0 ? 'disabled' : ''}>${chevronUp}</button>
+          <button class="btn-icon move-down-btn" title="Move down" aria-label="Move ${escapeHtml(color.displayLabel)} down" ${color.position === palette.length - 1 ? 'disabled' : ''}>${chevronDown}</button>
+          <button class="btn-icon delete-btn" title="Remove" aria-label="Remove ${escapeHtml(color.displayLabel)}">${close}</button>
         </div>
       `;
 

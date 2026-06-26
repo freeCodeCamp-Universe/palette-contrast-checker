@@ -59,6 +59,15 @@
   border-radius: var(--border-radius);
   font-size: 1rem;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Inline SVG icons inherit text color and scale with font-size. */
+.icon {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .btn-icon:hover:not(:disabled) {
