@@ -60,11 +60,16 @@ function createResultCard(result, preferences) {
   ratio.className = 'result-card-ratio';
   ratio.textContent = `${result.contrastRatio}:1`;
 
-  const badges = document.createElement('div');
+  // Split each text criterion into its own AA and AAA pass/fail badge so the
+  // level reached is explicit. Non-text contrast (WCAG 1.4.11) only defines a
+  // single 3:1 level, so it stays as one badge.
+  const badges = document.createElement('ul');
   badges.className = 'result-card-badges';
-  badges.appendChild(makeBadge('Normal', result.normalText));
-  badges.appendChild(makeBadge('Large', result.largeText));
-  badges.appendChild(makePassFailBadge('Non-text', result.nonText));
+  badges.appendChild(makeBadge('Normal text AA', result.normalText !== 'fail'));
+  badges.appendChild(makeBadge('Normal text AAA', result.normalText === 'AAA'));
+  badges.appendChild(makeBadge('Large text AA', result.largeText !== 'fail'));
+  badges.appendChild(makeBadge('Large text AAA', result.largeText === 'AAA'));
+  badges.appendChild(makeBadge('Non-text', result.nonText !== 'fail'));
 
   card.appendChild(header);
   card.appendChild(preview);
@@ -74,20 +79,15 @@ function createResultCard(result, preferences) {
   return card;
 }
 
-function makeBadge(label, level) {
-  const span = document.createElement('span');
-  const icon = level === 'fail' ? '\u2717' : '\u2713';
-  span.className = `badge badge-${level === 'fail' ? 'fail' : level === 'AAA' ? 'aaa' : 'aa'}`;
-  span.textContent = `${icon} ${label}: ${level === 'fail' ? 'Fail' : level}`;
-  return span;
-}
-
-function makePassFailBadge(label, level) {
-  const pass = level !== 'fail';
-  const span = document.createElement('span');
-  span.className = `badge ${pass ? 'badge-aaa' : 'badge-fail'}`;
-  span.textContent = `${pass ? '\u2713' : '\u2717'} ${label}: ${pass ? level : 'Fail'}`;
-  return span;
+// One binary pass/fail list item per criterion+level. Pass is green, fail is
+// red, with a check/cross icon and an explicit "Pass"/"Fail" word so the state
+// is never signalled by color alone.
+function makeBadge(label, pass) {
+  const li = document.createElement('li');
+  const icon = pass ? '\u2713' : '\u2717';
+  li.className = `badge ${pass ? 'badge-pass' : 'badge-fail'}`;
+  li.textContent = `${icon} ${label}: ${pass ? 'Pass' : 'Fail'}`;
+  return li;
 }
 
 

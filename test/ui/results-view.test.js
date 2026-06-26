@@ -9,7 +9,7 @@ function makeStore() {
   return createStore(reducer, getInitialState());
 }
 
-const RESULT = {
+const baseResult = {
   foregroundId: '1',
   foregroundHex: '#000000',
   foregroundLabel: '#000000',
@@ -23,21 +23,41 @@ const RESULT = {
   stateChecks: {},
 };
 
-describe('results view — non-text badge label', () => {
+function render(result) {
+  const store = makeStore();
+  initResultsView(store);
+  store.dispatch({ type: 'SET_RESULTS', payload: [result] });
+}
+
+describe('results view — badges', () => {
   beforeEach(() => {
     loadAppDom();
     resetLocalStorage();
   });
 
-  it('labels the non-text contrast badge "Non-text" (not "UI")', () => {
-    const store = makeStore();
-    initResultsView(store);
-    store.dispatch({ type: 'SET_RESULTS', payload: [RESULT] });
+  it('renders badges as a list (ul/li) split into AA and AAA levels', () => {
+    render(baseResult);
+    const list = document.querySelector('.result-card-badges');
+    expect(list.tagName).toBe('UL');
+    const text = [...list.querySelectorAll('li.badge')].map((li) => li.textContent);
+    expect(text.length).toBe(5);
+    expect(text[0]).toContain('Normal text AA');
+    expect(text[1]).toContain('Normal text AAA');
+    expect(text[2]).toContain('Large text AA');
+    expect(text[3]).toContain('Large text AAA');
+    expect(text[4]).toContain('Non-text');
+    expect(text.join(' ')).not.toMatch(/\bUI\b/);
+  });
 
-    const badgeText = [...document.querySelectorAll('.result-card-badges .badge')].map(
-      (b) => b.textContent
-    );
-    expect(badgeText.some((t) => t.includes('Non-text'))).toBe(true);
-    expect(badgeText.some((t) => /\bUI\b/.test(t))).toBe(false);
+  it('marks AA pass / AAA fail separately and colors them green/red', () => {
+    // normalText 'AA' => passes AA, fails AAA; nonText 'fail'
+    render({ ...baseResult, normalText: 'AA', largeText: 'AAA', nonText: 'fail' });
+    const items = document.querySelectorAll('.result-card-badges li.badge');
+    expect(items[0].classList.contains('badge-pass')).toBe(true); // Normal AA
+    expect(items[0].textContent).toContain('Pass');
+    expect(items[1].classList.contains('badge-fail')).toBe(true); // Normal AAA
+    expect(items[1].textContent).toContain('Fail');
+    expect(items[1].textContent).toContain('✗');
+    expect(items[4].classList.contains('badge-fail')).toBe(true); // Non-text fail
   });
 });

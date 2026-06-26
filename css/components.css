@@ -162,13 +162,8 @@ input[type="range"] {
   white-space: nowrap;
 }
 
-.badge-aaa {
-  background: var(--badge-aaa);
-  color: var(--primary-bg);
-}
-
-.badge-aa {
-  background: var(--badge-aa);
+.badge-pass {
+  background: var(--badge-pass);
   color: var(--primary-bg);
 }
 

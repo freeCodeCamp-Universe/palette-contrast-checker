@@ -63,8 +63,7 @@
   --header-height: 38px;
   --border-radius: 4px;
 
-  /* === WCAG Badge Colors === */
-  --badge-aaa: var(--green-light);
-  --badge-aa: var(--yellow-light);
+  /* === Result Badge Colors (pass = green, fail = red) === */
+  --badge-pass: var(--green-light);
   --badge-fail: var(--red-light);
 }
