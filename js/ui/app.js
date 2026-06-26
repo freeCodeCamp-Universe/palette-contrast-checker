@@ -23,6 +23,13 @@ export function getStore() {
   return store;
 }
 
+// Run analysis as if the user clicked Analyze. The handler enforces the
+// minimum-color and >10-color (confirmation) rules, so we just delegate.
+function triggerAnalyze() {
+  const btn = document.getElementById('analyze-btn');
+  if (btn && btn.getAttribute('aria-disabled') !== 'true') btn.click();
+}
+
 export function initApp() {
   const initialState = getInitialState();
 
@@ -43,13 +50,6 @@ export function initApp() {
     lastPalette = state.palette;
     history.replaceState(null, '', encodePaletteToHash(state.palette) || window.location.pathname);
   });
-
-  // Run analysis as if the user clicked Analyze. The handler enforces the
-  // minimum-color and >10-color (confirmation) rules, so we just delegate.
-  function triggerAnalyze() {
-    const btn = document.getElementById('analyze-btn');
-    if (btn && btn.getAttribute('aria-disabled') !== 'true') btn.click();
-  }
 
   // Load a #p=... palette from the URL hash (returns true if one was loaded).
   function loadPaletteFromHash(hash) {
@@ -122,6 +122,9 @@ function initRecoveryBanner(wipPalette) {
     store.dispatch({ type: 'LOAD_PALETTE', payload: wipPalette });
     store.dispatch({ type: 'SET_RECOVERY_AVAILABLE', payload: false });
     banner.hidden = true;
+    // Restoring loads a palette (and updates the URL), so analyze it too — the
+    // same behaviour as importing a palette from a #p= URL.
+    triggerAnalyze();
   });
 
   dismissBtn.addEventListener('click', () => {

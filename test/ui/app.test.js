@@ -2,6 +2,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { loadAppDom, resetLocalStorage } from '../helpers/dom.js';
 import { initApp, getStore } from '../../js/ui/app.js';
+import { saveWip } from '../../js/state/persistence.js';
 
 describe('app bootstrap — URL <-> palette sync', () => {
   beforeEach(() => {
@@ -67,5 +68,18 @@ describe('app bootstrap — auto-analyze imported palettes', () => {
     expect(getStore().getState().palette).toHaveLength(11);
     expect(document.getElementById('analysis-warning').hidden).toBe(false);
     expect(getStore().getState().results).toBeNull();
+  });
+
+  it('analyzes the palette when restored from the recovery banner', async () => {
+    saveWip([
+      { id: '1', hex: '#000000', displayLabel: '#000000' },
+      { id: '2', hex: '#ffffff', displayLabel: '#ffffff' },
+    ]);
+    initApp();
+    expect(document.getElementById('recovery-banner').hidden).toBe(false);
+
+    document.getElementById('recovery-restore-btn').click();
+    expect(getStore().getState().palette).toHaveLength(2);
+    await vi.waitFor(() => expect(getStore().getState().results).not.toBeNull());
   });
 });
