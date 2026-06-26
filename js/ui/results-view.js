@@ -64,7 +64,7 @@ function createResultCard(result, preferences) {
   badges.className = 'result-card-badges';
   badges.appendChild(makeBadge('Normal', result.normalText));
   badges.appendChild(makeBadge('Large', result.largeText));
-  badges.appendChild(makePassFailBadge('UI', result.nonText));
+  badges.appendChild(makePassFailBadge('Non-text', result.nonText));
 
   card.appendChild(header);
   card.appendChild(preview);
