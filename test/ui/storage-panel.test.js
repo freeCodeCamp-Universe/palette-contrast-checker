@@ -57,3 +57,14 @@ describe('storage panel — palette-consuming controls', () => {
     }
   });
 });
+
+describe('storage panel — palette name length', () => {
+  beforeEach(() => {
+    loadAppDom();
+    resetLocalStorage();
+  });
+
+  it('caps the palette name input at 50 characters', () => {
+    expect(document.getElementById('save-name-input').maxLength).toBe(50);
+  });
+});
