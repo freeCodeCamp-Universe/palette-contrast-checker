@@ -51,3 +51,26 @@ describe('analysis runner — URL reflects analyzed palette', () => {
     expect(window.location.hash).toBe('');
   });
 });
+
+describe('analysis runner — >10-color warning lifecycle', () => {
+  beforeEach(() => {
+    loadAppDom();
+    resetLocalStorage();
+    history.replaceState(null, '', '/');
+  });
+
+  it('hides the warning once colors drop back to 10 or fewer', () => {
+    const store = makeStore();
+    initAnalysisRunner(store);
+    for (let i = 0; i < 11; i++) addColor(store, String(i), `#0000${(10 + i).toString(16)}`);
+
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const warning = document.getElementById('analysis-warning');
+    analyzeBtn.setAttribute('aria-disabled', 'false');
+    analyzeBtn.click();
+    expect(warning.hidden).toBe(false); // warning shown for 11 colors
+
+    store.dispatch({ type: 'REMOVE_COLOR', payload: { id: '0' } }); // back to 10
+    expect(warning.hidden).toBe(true);
+  });
+});

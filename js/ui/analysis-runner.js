@@ -82,4 +82,13 @@ export function initAnalysisRunner(store) {
     pendingAnalysis = true;
     runAnalysis();
   });
+
+  // The >10-color warning is shown on Analyze; clear it once the palette is
+  // back within range so it doesn't linger after colors are removed.
+  store.subscribe((state) => {
+    if (state.palette.length <= 10) {
+      warning.hidden = true;
+      pendingAnalysis = false;
+    }
+  });
 }
