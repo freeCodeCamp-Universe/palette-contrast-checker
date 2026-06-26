@@ -19,7 +19,6 @@
   --yellow-gold: #ffbf00;
   --yellow-dark: #4d3800;
   --blue-light: #99c9ff;
-  --blue-lighter: #cfe3ff; /* AAA (8.07:1) text on --blue-dark, for info alerts */
   --blue-dark: #002ead;
   --blue-mid: #198eee;
   --green-light: #acd157;
@@ -35,7 +34,7 @@
   --text-primary: var(--gray-00);
   --text-secondary: var(--gray-05);
   --text-tertiary: var(--gray-10);
-  --text-muted: #a0a0ad;
+  --text-muted: #bdbdc7; /* custom grey: AAA (>=7:1) on all surfaces incl. #2a2a40 */
 
   --color-cta: var(--yellow-gold);
   --color-cta-text: var(--gray-90);

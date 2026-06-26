@@ -3,6 +3,19 @@
  */
 
 import { savePreferences } from '../state/persistence.js';
+import { contrastRatio } from '../lib/contrast.js';
+import { hexToRgb } from '../lib/color-convert.js';
+
+const BLACK = { r: 0, g: 0, b: 0 };
+const WHITE = { r: 255, g: 255, b: 255 };
+
+// Black or white, whichever reads better on the given swatch color — so the
+// option label stays legible on its own background (this is a contrast tool!).
+export function readableTextColor(hex) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return '#000000';
+  return contrastRatio(rgb, BLACK) >= contrastRatio(rgb, WHITE) ? '#000000' : '#ffffff';
+}
 
 export function initResultsFilter(store) {
   const levelFilter = document.getElementById('filter-level');
@@ -59,6 +72,7 @@ function updateColorFilterOptions(select, palette, currentValue) {
     opt.value = color.hex;
     opt.textContent = `${color.displayLabel}`;
     opt.style.backgroundColor = color.hex;
+    opt.style.color = readableTextColor(color.hex);
     select.appendChild(opt);
   }
 

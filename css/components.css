@@ -202,7 +202,7 @@ input[type="range"] {
 
 .alert-info {
   background: var(--blue-dark);
-  color: var(--blue-lighter); /* AAA contrast (8.07:1) on --blue-dark */
+  color: var(--gray-10); /* AAA contrast (7.92:1) on --blue-dark */
   border: 1px solid var(--color-link);
 }
 
