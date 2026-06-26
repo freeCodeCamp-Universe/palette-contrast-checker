@@ -16,12 +16,21 @@ export function relativeLuminance(r, g, b) {
   return 0.2126 * linearize(r) + 0.7152 * linearize(g) + 0.0722 * linearize(b);
 }
 
+// Returns the full-precision contrast ratio. Per WCAG SC 1.4.3 the computed
+// value must NOT be rounded before being compared to a threshold (e.g. 2.999
+// does not meet 3:1), so callers classify with this precise value and only
+// round for display via formatRatio().
 export function contrastRatio(rgb1, rgb2) {
   const l1 = relativeLuminance(rgb1.r, rgb1.g, rgb1.b);
   const l2 = relativeLuminance(rgb2.r, rgb2.g, rgb2.b);
   const lighter = Math.max(l1, l2);
   const darker = Math.min(l1, l2);
-  return Math.round(((lighter + 0.05) / (darker + 0.05)) * 100) / 100;
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+// Round a ratio down to 2 decimals for display (truncate, never overstate).
+export function formatRatio(ratio) {
+  return Math.floor(ratio * 100) / 100;
 }
 
 export function classifyContrast(ratio) {
@@ -60,7 +69,7 @@ export function analyzeAllPairs(colors) {
       const fgRgb = hexToRgb(fg.hex);
       const bgRgb = hexToRgb(bg.hex);
       const ratio = contrastRatio(fgRgb, bgRgb);
-      const classification = classifyContrast(ratio);
+      const classification = classifyContrast(ratio); // precise value for thresholds
       const states = stateChecks(ratio);
 
       results.push({
@@ -70,7 +79,7 @@ export function analyzeAllPairs(colors) {
         backgroundId: bg.id,
         backgroundHex: bg.hex,
         backgroundLabel: bg.displayLabel,
-        contrastRatio: ratio,
+        contrastRatio: formatRatio(ratio), // rounded only for display
         normalText: classification.normalText,
         largeText: classification.largeText,
         nonText: classification.nonText,

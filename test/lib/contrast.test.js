@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   relativeLuminance,
   contrastRatio,
+  formatRatio,
   classifyContrast,
   analyzeAllPairs,
   findMissingCoverage,
@@ -45,6 +46,21 @@ describe('contrastRatio', () => {
     const ratio = contrastRatio({ r: 0, g: 0, b: 255 }, { r: 255, g: 255, b: 255 });
     expect(ratio).toBeGreaterThan(8);
     expect(ratio).toBeLessThan(9);
+  });
+
+  it('returns the full-precision value (not rounded to 2 decimals)', () => {
+    // #959595 on white is ~2.9957 — must stay below 3, not round up to 3.00.
+    const ratio = contrastRatio({ r: 0x95, g: 0x95, b: 0x95 }, { r: 255, g: 255, b: 255 });
+    expect(ratio).toBeLessThan(3);
+    expect(ratio).toBeGreaterThan(2.99);
+  });
+});
+
+describe('formatRatio', () => {
+  it('truncates to 2 decimals without rounding up', () => {
+    expect(formatRatio(2.9957)).toBe(2.99);
+    expect(formatRatio(21)).toBe(21);
+    expect(formatRatio(4.5)).toBe(4.5);
   });
 });
 
@@ -134,6 +150,17 @@ describe('analyzeAllPairs', () => {
     expect(results).toHaveLength(2);
     expect(results[0].contrastRatio).toBe(21);
     expect(results[1].contrastRatio).toBe(21);
+  });
+
+  it('does not let a 2.99:1 pair pass the 3:1 thresholds (WCAG SC 1.4.3)', () => {
+    const [r] = analyzeAllPairs([
+      { id: '1', hex: '#959595', displayLabel: 'gray' },
+      { id: '2', hex: '#ffffff', displayLabel: 'white' },
+    ]);
+    expect(r.contrastRatio).toBeLessThan(3); // displayed value floored to 2.99
+    expect(r.normalText).toBe('fail');
+    expect(r.largeText).toBe('fail');
+    expect(r.nonText).toBe('fail');
   });
 
   it('includes directional info', () => {
