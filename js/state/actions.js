@@ -10,6 +10,15 @@ export function resetIdCounter(val = 1) {
   nextId = val;
 }
 
+// The foreground/background result filters hold specific palette hex values, so
+// they become stale when the palette changes. Reset them to "Any".
+function clearColorFilters(preferences) {
+  return {
+    ...preferences,
+    activeFilters: { ...preferences.activeFilters, foreground: null, background: null },
+  };
+}
+
 export function getInitialState() {
   return {
     palette: [],
@@ -51,6 +60,7 @@ export function reducer(state, action) {
         results: null,
         suggestions: null,
         ui: { ...state.ui, alerts: [] },
+        preferences: clearColorFilters(state.preferences),
       };
     }
 
@@ -64,6 +74,7 @@ export function reducer(state, action) {
         results: null,
         suggestions: null,
         ui: { ...state.ui, alerts: [] },
+        preferences: clearColorFilters(state.preferences),
       };
     }
 
@@ -102,6 +113,7 @@ export function reducer(state, action) {
         ui: { ...state.ui, pendingMerge: null, alerts: [] },
         results: null,
         suggestions: null,
+        preferences: clearColorFilters(state.preferences),
       };
     }
 
@@ -183,6 +195,7 @@ export function reducer(state, action) {
         results: null,
         suggestions: null,
         ui: { ...state.ui, alerts: [] },
+        preferences: clearColorFilters(state.preferences),
       };
     }
 
@@ -201,6 +214,7 @@ export function reducer(state, action) {
         results: null,
         suggestions: null,
         ui: { ...state.ui, alerts: [] },
+        preferences: clearColorFilters(state.preferences),
       };
     }
 

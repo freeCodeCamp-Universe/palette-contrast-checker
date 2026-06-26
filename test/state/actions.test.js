@@ -186,6 +186,40 @@ describe('reducer', () => {
     });
   });
 
+  describe('resets stale color filters on palette changes', () => {
+    const cases = [
+      ['ADD_COLOR', { type: 'ADD_COLOR', payload: { id: '9', hex: '#123456', displayLabel: 'x' } }],
+      ['REMOVE_COLOR', { type: 'REMOVE_COLOR', payload: { id: '1' } }],
+      ['LOAD_PALETTE', { type: 'LOAD_PALETTE', payload: [{ id: '1', hex: '#000000' }] }],
+      [
+        'ADD_SUGGESTIONS_TO_PALETTE',
+        { type: 'ADD_SUGGESTIONS_TO_PALETTE', payload: [{ id: '5', hex: '#abcdef' }] },
+      ],
+    ];
+
+    for (const [name, action] of cases) {
+      it(`${name} clears foreground/background filters`, () => {
+        state.palette = [{ id: '1', hex: '#ff0000', position: 0 }];
+        state.preferences.activeFilters.foreground = '#ff0000';
+        state.preferences.activeFilters.background = '#ff0000';
+        const next = reducer(state, action);
+        expect(next.preferences.activeFilters.foreground).toBeNull();
+        expect(next.preferences.activeFilters.background).toBeNull();
+      });
+    }
+
+    it('keeps level/category filters intact', () => {
+      state.palette = [{ id: '1', hex: '#ff0000', position: 0 }];
+      state.preferences.activeFilters.level = 'AAA';
+      state.preferences.activeFilters.category = 'normalText';
+      state.preferences.activeFilters.foreground = '#ff0000';
+      const next = reducer(state, { type: 'REMOVE_COLOR', payload: { id: '1' } });
+      expect(next.preferences.activeFilters.level).toBe('AAA');
+      expect(next.preferences.activeFilters.category).toBe('normalText');
+      expect(next.preferences.activeFilters.foreground).toBeNull();
+    });
+  });
+
   describe('unknown action', () => {
     it('returns state unchanged', () => {
       const next = reducer(state, { type: 'UNKNOWN' });
