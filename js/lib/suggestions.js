@@ -27,10 +27,25 @@ export function generateSuggestions(palette) {
   const lightDerived = generatePaletteDerived(paletteRgbs, paletteHexes, 'light');
   const lightNeutral = generateNeutrals(LIGHT_NEUTRALS, paletteRgbs, paletteHexes);
 
+  // Pick 3 of each kind at random from the top-scoring candidates so that
+  // "Generate New Suggestions" produces fresh (but still good) options on each
+  // click instead of the same deterministic set every time.
   return {
-    dark: [...darkDerived.slice(0, 3), ...darkNeutral.slice(0, 3)],
-    light: [...lightDerived.slice(0, 3), ...lightNeutral.slice(0, 3)],
+    dark: [...pickRandom(darkDerived, 3), ...pickRandom(darkNeutral, 3)],
+    light: [...pickRandom(lightDerived, 3), ...pickRandom(lightNeutral, 3)],
   };
+}
+
+// Return up to `count` items chosen at random from `items` (no repeats).
+function pickRandom(items, count) {
+  if (items.length <= count) return items.slice();
+  const pool = items.slice();
+  const out = [];
+  while (out.length < count && pool.length > 0) {
+    const i = Math.floor(Math.random() * pool.length);
+    out.push(pool.splice(i, 1)[0]);
+  }
+  return out;
 }
 
 function generatePaletteDerived(paletteRgbs, paletteHexes, mode) {
@@ -83,7 +98,7 @@ function generatePaletteDerived(paletteRgbs, paletteHexes, mode) {
   }
 
   candidates.sort((a, b) => b.aaaCount - a.aaaCount || b.avgRatio - a.avgRatio);
-  return candidates.slice(0, 3);
+  return candidates.slice(0, 8);
 }
 
 function generateNeutrals(neutralPool, paletteRgbs, paletteHexes) {
@@ -102,7 +117,7 @@ function generateNeutrals(neutralPool, paletteRgbs, paletteHexes) {
   }
 
   candidates.sort((a, b) => b.aaaCount - a.aaaCount || b.avgRatio - a.avgRatio);
-  return candidates.slice(0, 3);
+  return candidates.slice(0, 8);
 }
 
 function scoreSuggestion(suggestionRgb, paletteRgbs) {

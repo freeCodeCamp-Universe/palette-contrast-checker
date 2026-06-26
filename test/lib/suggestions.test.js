@@ -49,4 +49,16 @@ describe('generateSuggestions', () => {
     const result = generateSuggestions(similar);
     expect(result.dark.length + result.light.length).toBe(12);
   });
+
+  it('varies across repeated calls (Generate New Suggestions)', () => {
+    // Collect all suggested hexes over many generations; a deterministic engine
+    // would only ever surface one fixed set, so the union would equal a single
+    // call's 12. Randomised selection should surface more than that.
+    const all = new Set();
+    for (let i = 0; i < 15; i++) {
+      const result = generateSuggestions(palette);
+      for (const s of [...result.dark, ...result.light]) all.add(s.hex.toLowerCase());
+    }
+    expect(all.size).toBeGreaterThan(12);
+  });
 });
