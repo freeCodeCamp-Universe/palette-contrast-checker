@@ -66,6 +66,17 @@ describe('persistence', () => {
       expect(list.map((p) => p.name)).toContain('b');
     });
 
+    it('includes colors and updatedAt in the list', () => {
+      saveNamedPalette('a', [
+        { id: '1', hex: '#ff0000' },
+        { id: '2', hex: '#00ff00' },
+      ]);
+      const [entry] = listNamedPalettes();
+      expect(entry.colorCount).toBe(2);
+      expect(entry.colors.map((c) => c.hex)).toEqual(['#ff0000', '#00ff00']);
+      expect(typeof entry.updatedAt).toBe('string');
+    });
+
     it('checks if name exists', () => {
       saveNamedPalette('exists', []);
       expect(paletteNameExists('exists')).toBe(true);

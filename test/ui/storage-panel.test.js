@@ -70,6 +70,31 @@ describe('storage panel — palette name length', () => {
   });
 });
 
+describe('storage panel — My Palettes list detail', () => {
+  beforeEach(() => {
+    loadAppDom();
+    resetLocalStorage();
+  });
+
+  it('renders a swatch per color and a colors/date meta line', () => {
+    saveNamedPalette('Ocean', [
+      { id: '1', hex: '#0a0a23', displayLabel: '#0a0a23' },
+      { id: '2', hex: '#99c9ff', displayLabel: '#99c9ff' },
+      { id: '3', hex: '#ffffff', displayLabel: '#ffffff' },
+    ]);
+    initStoragePanel(makeStore());
+    document.getElementById('load-palette-btn').click();
+
+    const item = document.querySelector('#saved-palettes-list .saved-palette-item');
+    expect(item.querySelectorAll('.saved-swatch').length).toBe(3);
+    expect(item.querySelector('.saved-palette-meta').textContent).toContain('3 colors');
+  });
+
+  it('labels the open-list button "My Palettes"', () => {
+    expect(document.getElementById('load-palette-btn').textContent.trim()).toBe('My Palettes');
+  });
+});
+
 describe('storage panel — save/load/delete feedback', () => {
   beforeEach(() => {
     loadAppDom();

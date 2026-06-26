@@ -142,10 +142,20 @@ export function initStoragePanel(store) {
     for (const p of palettes) {
       const li = document.createElement('li');
       li.className = 'saved-palette-item';
+      const countLabel = `${p.colorCount} color${p.colorCount !== 1 ? 's' : ''}`;
+      const savedLabel = formatSavedDate(p.updatedAt);
+      const meta = savedLabel ? `${countLabel} · saved ${savedLabel}` : countLabel;
+      const swatches = p.colors
+        .map(
+          (c) =>
+            `<span class="saved-swatch" style="background-color:${escapeHtml(c.hex)}" title="${escapeHtml(c.hex)}"></span>`
+        )
+        .join('');
       li.innerHTML = `
-        <div>
+        <div class="saved-palette-info">
           <span class="saved-palette-name">${escapeHtml(p.name)}</span>
-          <span class="saved-palette-meta">${p.colorCount} colors</span>
+          <span class="saved-palette-meta">${meta}</span>
+          <div class="saved-palette-swatches" aria-hidden="true">${swatches}</div>
         </div>
         <div class="flex-center">
           <button class="btn btn-sm btn-primary load-btn">Load</button>
@@ -274,4 +284,11 @@ function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+function formatSavedDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }

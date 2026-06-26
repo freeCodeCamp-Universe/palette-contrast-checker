@@ -69,6 +69,7 @@ export function listNamedPalettes() {
   return Object.entries(storage.palettes).map(([name, data]) => ({
     name,
     colorCount: data.colors?.length || 0,
+    colors: data.colors || [],
     updatedAt: data.updatedAt,
   }));
 }

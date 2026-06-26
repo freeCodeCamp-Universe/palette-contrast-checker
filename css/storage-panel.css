@@ -26,7 +26,16 @@
   border-color: var(--border-color);
 }
 
-.saved-palette-item > div:first-child {
+.saved-palettes-heading {
+  font-size: 0.95rem;
+  color: var(--text-tertiary);
+  margin-top: var(--space-md);
+}
+
+.saved-palette-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   min-width: 0; /* allow the text column to shrink so long names wrap */
 }
 
@@ -42,6 +51,21 @@
 .saved-palette-meta {
   font-size: 0.8rem;
   color: var(--text-muted);
+}
+
+.saved-palette-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.saved-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .storage-status {
