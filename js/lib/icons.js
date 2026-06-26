@@ -21,3 +21,4 @@ export const eye = icon('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-
 export const chevronUp = icon('<path d="m6 15 6-6 6 6"/>');
 export const chevronDown = icon('<path d="m6 9 6 6 6-6"/>');
 export const close = icon('<path d="M18 6 6 18M6 6l12 12"/>');
+export const info = icon('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>');

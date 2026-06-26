@@ -19,6 +19,7 @@
   --yellow-gold: #ffbf00;
   --yellow-dark: #4d3800;
   --blue-light: #99c9ff;
+  --blue-lighter: #cfe3ff; /* AAA (8.07:1) text on --blue-dark, for info alerts */
   --blue-dark: #002ead;
   --blue-mid: #198eee;
   --green-light: #acd157;

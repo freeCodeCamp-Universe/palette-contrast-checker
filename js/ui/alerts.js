@@ -2,6 +2,8 @@
  * Alerts — missing coverage warnings and general notifications.
  */
 
+import { info } from '../lib/icons.js';
+
 export function initAlerts(store) {
   const container = document.getElementById('alerts-container');
 
@@ -13,9 +15,9 @@ export function initAlerts(store) {
 
     for (const message of ui.alerts) {
       const div = document.createElement('div');
-      div.className = 'alert alert-warning';
+      div.className = 'alert alert-info';
       div.setAttribute('role', 'alert');
-      div.innerHTML = `<span aria-hidden="true">&#9888;</span> <span>${escapeHtml(message)}</span>`;
+      div.innerHTML = `${info}<span>${escapeHtml(message)}</span>`;
       container.appendChild(div);
     }
   }
