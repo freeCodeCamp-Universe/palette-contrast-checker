@@ -50,6 +50,7 @@ export function reducer(state, action) {
         ],
         results: null,
         suggestions: null,
+        ui: { ...state.ui, alerts: [] },
       };
     }
 
@@ -62,6 +63,7 @@ export function reducer(state, action) {
         palette: filtered,
         results: null,
         suggestions: null,
+        ui: { ...state.ui, alerts: [] },
       };
     }
 
@@ -97,7 +99,7 @@ export function reducer(state, action) {
       return {
         ...state,
         palette,
-        ui: { ...state.ui, pendingMerge: null },
+        ui: { ...state.ui, pendingMerge: null, alerts: [] },
         results: null,
         suggestions: null,
       };
@@ -180,6 +182,7 @@ export function reducer(state, action) {
         palette: action.payload.map((c, i) => ({ ...c, position: i })),
         results: null,
         suggestions: null,
+        ui: { ...state.ui, alerts: [] },
       };
     }
 
@@ -197,6 +200,7 @@ export function reducer(state, action) {
         palette: [...state.palette, ...newColors],
         results: null,
         suggestions: null,
+        ui: { ...state.ui, alerts: [] },
       };
     }
 
