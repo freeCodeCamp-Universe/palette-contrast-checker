@@ -6,7 +6,6 @@ import { analyzeAllPairs, findMissingCoverage } from '../lib/contrast.js';
 import { findDuplicateGroups } from '../lib/duplicates.js';
 import { saveWip } from '../state/persistence.js';
 import { generateSuggestions } from '../lib/suggestions.js';
-import { encodePaletteToHash } from '../lib/palette-url.js';
 
 export function initAnalysisRunner(store) {
   const analyzeBtn = document.getElementById('analyze-btn');
@@ -40,10 +39,6 @@ export function initAnalysisRunner(store) {
 
     warning.hidden = true;
     pendingAnalysis = false;
-
-    // Reflect the analyzed palette in the URL so it can be bookmarked/shared.
-    history.replaceState(null, '', encodePaletteToHash(palette) || window.location.pathname);
-
     store.dispatch({ type: 'SET_ANALYSIS_RUNNING', payload: true });
 
     // Use setTimeout to avoid blocking the UI

@@ -6,7 +6,7 @@
 import { createStore } from '../state/store.js';
 import { reducer, getInitialState, generateId, resetIdCounter } from '../state/actions.js';
 import { loadWip, loadPreferences } from '../state/persistence.js';
-import { decodePaletteFromHash } from '../lib/palette-url.js';
+import { decodePaletteFromHash, encodePaletteToHash } from '../lib/palette-url.js';
 import { initPaletteEditor } from './palette-editor.js';
 import { initAnalysisRunner } from './analysis-runner.js';
 import { initResultsView } from './results-view.js';
@@ -34,10 +34,28 @@ export function initApp() {
 
   store = createStore(reducer, initialState);
 
-  // Check URL hash for shared palette
-  const hashPalette = decodePaletteFromHash(window.location.hash);
-  if (hashPalette && hashPalette.length > 0) {
-    const colors = hashPalette.map((c) => ({
+  // Keep the URL hash in sync with the palette: any palette state is shareable
+  // and survives a reload. replaceState does not fire hashchange, so this does
+  // not loop with the hashchange listener below.
+  let lastPalette = store.getState().palette;
+  store.subscribe((state) => {
+    if (state.palette === lastPalette) return;
+    lastPalette = state.palette;
+    history.replaceState(null, '', encodePaletteToHash(state.palette) || window.location.pathname);
+  });
+
+  // Run analysis as if the user clicked Analyze. The handler enforces the
+  // minimum-color and >10-color (confirmation) rules, so we just delegate.
+  function triggerAnalyze() {
+    const btn = document.getElementById('analyze-btn');
+    if (btn && btn.getAttribute('aria-disabled') !== 'true') btn.click();
+  }
+
+  // Load a #p=... palette from the URL hash (returns true if one was loaded).
+  function loadPaletteFromHash(hash) {
+    const decoded = decodePaletteFromHash(hash);
+    if (!decoded || decoded.length === 0) return false;
+    const colors = decoded.map((c) => ({
       id: generateId(),
       hex: c.hex,
       displayLabel: c.displayLabel,
@@ -45,9 +63,19 @@ export function initApp() {
       sourceType: 'url-import',
     }));
     store.dispatch({ type: 'LOAD_PALETTE', payload: colors });
-    // Clear hash so it doesn't interfere with future navigation
-    history.replaceState(null, '', window.location.pathname);
-  } else {
+    return true;
+  }
+
+  // React to #p=... links pasted into an already-open tab (a hash-only change
+  // does not reload the page, so the initial load below would never see it).
+  // The UI is already wired up at this point, so analyze immediately.
+  window.addEventListener('hashchange', () => {
+    if (loadPaletteFromHash(window.location.hash)) triggerAnalyze();
+  });
+
+  // Check URL hash for a shared palette on initial load.
+  const loadedFromHash = loadPaletteFromHash(window.location.hash);
+  if (!loadedFromHash) {
     // Check for WIP recovery
     const wip = loadWip();
     if (wip && wip.length > 0) {
@@ -77,6 +105,10 @@ export function initApp() {
   initStoragePanel(store);
   initAlerts(store);
   initDragReorder(store);
+
+  // A palette imported from the URL is analyzed automatically — done after the
+  // UI is wired up so the Analyze handler and button state exist.
+  if (loadedFromHash) triggerAnalyze();
 }
 
 function initRecoveryBanner(wipPalette) {
