@@ -234,6 +234,17 @@ export function initStoragePanel(store) {
     const json = exportAsJson(palette, results);
     downloadFile('analysis.json', json, 'application/json');
   });
+
+  // Actions that operate on the current palette make no sense when it's empty.
+  // (Load Palette / Import CSV bring colors in, so they stay enabled.)
+  function syncControls(state) {
+    const empty = state.palette.length === 0;
+    saveBtn.disabled = empty;
+    shareBtn.disabled = empty;
+    exportCsvBtn.disabled = empty;
+  }
+  store.subscribe(syncControls);
+  syncControls(store.getState());
 }
 
 function downloadFile(filename, content, mimeType) {
