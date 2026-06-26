@@ -4,6 +4,7 @@ import { loadAppDom, resetLocalStorage } from '../helpers/dom.js';
 import { createStore } from '../../js/state/store.js';
 import { reducer, getInitialState } from '../../js/state/actions.js';
 import { initStoragePanel } from '../../js/ui/storage-panel.js';
+import { saveNamedPalette } from '../../js/state/persistence.js';
 
 function makeStore() {
   return createStore(reducer, getInitialState());
@@ -66,5 +67,49 @@ describe('storage panel — palette name length', () => {
 
   it('caps the palette name input at 50 characters', () => {
     expect(document.getElementById('save-name-input').maxLength).toBe(50);
+  });
+});
+
+describe('storage panel — save/load/delete feedback', () => {
+  beforeEach(() => {
+    loadAppDom();
+    resetLocalStorage();
+  });
+
+  it('announces a save in the status live region', () => {
+    const store = makeStore();
+    initStoragePanel(store);
+    store.dispatch(ADD_RED);
+
+    document.getElementById('save-palette-btn').click(); // open dialog
+    document.getElementById('save-name-input').value = 'Sunset';
+    document.getElementById('save-confirm-btn').click();
+
+    const status = document.getElementById('storage-status');
+    expect(status.getAttribute('role')).toBe('status');
+    expect(status.textContent).toContain('Sunset');
+    expect(status.textContent.toLowerCase()).toContain('saved');
+  });
+
+  it('announces a load in the status live region', () => {
+    saveNamedPalette('Ocean', [{ id: '1', hex: '#000000', displayLabel: '#000000' }]);
+    const store = makeStore();
+    initStoragePanel(store);
+
+    document.getElementById('load-palette-btn').click(); // render list
+    document.querySelector('#saved-palettes-list .load-btn').click();
+
+    expect(document.getElementById('storage-status').textContent.toLowerCase()).toContain('loaded');
+  });
+
+  it('announces a delete in the status live region', () => {
+    saveNamedPalette('Ocean', [{ id: '1', hex: '#000000', displayLabel: '#000000' }]);
+    const store = makeStore();
+    initStoragePanel(store);
+
+    document.getElementById('load-palette-btn').click();
+    document.querySelector('#saved-palettes-list .delete-btn').click();
+
+    expect(document.getElementById('storage-status').textContent.toLowerCase()).toContain('deleted');
   });
 });

@@ -22,3 +22,4 @@ export const chevronUp = icon('<path d="m6 15 6-6 6 6"/>');
 export const chevronDown = icon('<path d="m6 9 6 6 6-6"/>');
 export const close = icon('<path d="M18 6 6 18M6 6l12 12"/>');
 export const info = icon('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>');
+export const check = icon('<path d="M20 6 9 17l-5-5"/>');

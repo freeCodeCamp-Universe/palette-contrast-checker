@@ -15,6 +15,7 @@ import { generateId } from '../state/actions.js';
 import { encodePaletteToHash } from '../lib/palette-url.js';
 import { serializePaletteCsv, parsePaletteCsv } from '../lib/csv-io.js';
 import { exportAsMarkdown, exportAsCsv, exportAsJson } from '../lib/export-analysis.js';
+import { check } from '../lib/icons.js';
 
 export function initStoragePanel(store) {
   const saveBtn = document.getElementById('save-palette-btn');
@@ -41,9 +42,18 @@ export function initStoragePanel(store) {
   const overwriteCancel = document.getElementById('overwrite-cancel-btn');
   const overwriteConfirm = document.getElementById('overwrite-confirm-btn');
 
+  const statusEl = document.getElementById('storage-status');
+
   let pendingOverwriteName = null;
   let overwriteTrigger = null;
   let removeOverwriteTrap = null;
+
+  // Confirm an action in a polite live region so it's announced to screen
+  // readers and visible to sighted users. It persists until the next storage
+  // action replaces it.
+  function showStatus(message) {
+    statusEl.innerHTML = `${check}<span>${escapeHtml(message)}</span>`;
+  }
 
   function closeOverwriteModal() {
     overwriteModal.hidden = true;
@@ -107,6 +117,7 @@ export function initStoragePanel(store) {
     saveDialog.hidden = true;
     saveOverwrite.hidden = true;
     saveInput.value = '';
+    showStatus(`Palette "${name}" saved.`);
   }
 
   // Load palette
@@ -146,6 +157,7 @@ export function initStoragePanel(store) {
         const colors = loadNamedPalette(p.name);
         if (colors) {
           store.dispatch({ type: 'LOAD_PALETTE', payload: colors });
+          showStatus(`Palette "${p.name}" loaded.`);
         }
         loadDialog.hidden = true;
       });
@@ -153,6 +165,7 @@ export function initStoragePanel(store) {
       li.querySelector('.delete-btn').addEventListener('click', () => {
         deleteNamedPalette(p.name);
         renderLoadList();
+        showStatus(`Palette "${p.name}" deleted.`);
       });
 
       loadList.appendChild(li);
