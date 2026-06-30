@@ -191,6 +191,13 @@ input[type="range"] {
   gap: var(--space-sm);
 }
 
+/* Match the icon's box to the first line's height so it centers against the
+   text instead of floating above it (align-items: flex-start). */
+.alert .icon {
+  height: calc(1em * var(--line-height-base));
+  flex-shrink: 0;
+}
+
 .alert-warning {
   background: var(--yellow-dark);
   color: var(--color-warning);
