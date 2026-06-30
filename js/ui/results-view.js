@@ -7,6 +7,8 @@ export function initResultsView(store) {
   const grid = document.getElementById('results-grid');
   const countEl = document.getElementById('results-count');
   const exportGroup = document.getElementById('analysis-export-group');
+  // Preview Settings only affect result cards, so they share the results' visibility.
+  const previewControls = document.getElementById('preview-controls');
 
   function render() {
     const { results, preferences } = store.getState();
@@ -14,11 +16,13 @@ export function initResultsView(store) {
     if (!results || results.length === 0) {
       section.hidden = true;
       exportGroup.hidden = true;
+      previewControls.hidden = true;
       return;
     }
 
     section.hidden = false;
     exportGroup.hidden = false;
+    previewControls.hidden = false;
 
     const filtered = applyFilters(results, preferences.activeFilters);
     const sorted = applySort(filtered, preferences.activeSort);

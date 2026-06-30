@@ -61,44 +61,6 @@
           <div class="palette-count" id="palette-count" aria-live="polite" aria-atomic="true"></div>
         </section>
 
-        <!-- Preview Controls -->
-        <section class="section-panel" id="preview-controls">
-          <h2>Preview Settings</h2>
-          <div class="form-group">
-            <label for="preview-text-input">Preview text</label>
-            <textarea
-              id="preview-text-input"
-              class="form-input"
-              rows="3"
-            >The quick brown fox jumps over the lazy dog.</textarea>
-          </div>
-          <div class="form-group" style="margin-top: var(--space-md)">
-            <label for="font-family-select">Font family</label>
-            <select id="font-family-select" class="form-input">
-              <option value="Arial">Arial</option>
-              <option value="Georgia">Georgia</option>
-              <option value="Verdana">Verdana</option>
-              <option value="Trebuchet MS">Trebuchet MS</option>
-              <option value="Times New Roman">Times New Roman</option>
-              <option value="Courier New">Courier New</option>
-              <option value="system-ui">system-ui</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-top: var(--space-md)">
-            <label for="font-size-slider">
-              Font size: <span id="font-size-value" aria-live="polite" aria-atomic="true">18</span>px
-            </label>
-            <input
-              type="range"
-              id="font-size-slider"
-              min="12"
-              max="48"
-              value="18"
-              step="1"
-            >
-          </div>
-        </section>
-
         <!-- Analysis Controls -->
         <section class="section-panel" id="analysis-controls">
           <button class="btn btn-primary" id="analyze-btn" style="width:100%" aria-disabled="true">
@@ -154,6 +116,44 @@
       <div class="main-content">
         <!-- Alerts -->
         <div id="alerts-container" aria-live="polite"></div>
+
+        <!-- Preview Controls -->
+        <section class="section-panel" id="preview-controls" hidden>
+          <h2>Preview Settings</h2>
+          <div class="form-group">
+            <label for="preview-text-input">Preview text</label>
+            <textarea
+              id="preview-text-input"
+              class="form-input"
+              rows="3"
+            >The quick brown fox jumps over the lazy dog.</textarea>
+          </div>
+          <div class="form-group" style="margin-top: var(--space-md)">
+            <label for="font-family-select">Font family</label>
+            <select id="font-family-select" class="form-input">
+              <option value="Arial">Arial</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Trebuchet MS">Trebuchet MS</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Courier New">Courier New</option>
+              <option value="system-ui">system-ui</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-top: var(--space-md)">
+            <label for="font-size-slider">
+              Font size: <span id="font-size-value" aria-live="polite" aria-atomic="true">18</span>px
+            </label>
+            <input
+              type="range"
+              id="font-size-slider"
+              min="12"
+              max="48"
+              value="18"
+              step="1"
+            >
+          </div>
+        </section>
 
         <!-- Results -->
         <section class="section-panel" id="results-section" hidden>
