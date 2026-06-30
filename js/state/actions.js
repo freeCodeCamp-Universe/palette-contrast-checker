@@ -28,6 +28,8 @@ export function getInitialState() {
       previewText: 'The quick brown fox jumps over the lazy dog.',
       fontFamily: 'Arial',
       fontSize: 18,
+      // null = follow the OS (prefers-color-scheme); 'light'/'dark' = user choice.
+      theme: null,
       activeFilters: { category: 'all', level: 'all', foreground: null, background: null },
       activeSort: 'contrast-desc',
     },
@@ -164,6 +166,13 @@ export function reducer(state, action) {
       return {
         ...state,
         preferences: { ...state.preferences, activeSort: action.payload },
+      };
+    }
+
+    case 'SET_THEME': {
+      return {
+        ...state,
+        preferences: { ...state.preferences, theme: action.payload },
       };
     }
 

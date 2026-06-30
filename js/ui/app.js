@@ -12,6 +12,7 @@ import { initAnalysisRunner } from './analysis-runner.js';
 import { initResultsView } from './results-view.js';
 import { initResultsFilter } from './results-filter.js';
 import { initPreviewControls } from './preview-controls.js';
+import { initThemeToggle } from './theme-toggle.js';
 import { initSuggestionsPanel } from './suggestions-panel.js';
 import { initStoragePanel } from './storage-panel.js';
 import { initAlerts } from './alerts.js';
@@ -90,6 +91,7 @@ export function initApp() {
   }
 
   // Initialize all UI modules
+  initThemeToggle(store);
   initPaletteEditor(store);
   initAnalysisRunner(store);
   initResultsView(store);

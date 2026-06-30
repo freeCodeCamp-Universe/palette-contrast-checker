@@ -6,6 +6,20 @@
   <meta name="theme-color" content="#0a0a23">
   <title>Palette Contrast Checker</title>
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <!-- Set the theme before first paint to avoid a flash. Mirrors the resolution
+       in js/ui/theme-toggle.js: saved choice wins, else follow the OS. -->
+  <script>
+    (function () {
+      try {
+        var saved = JSON.parse(localStorage.getItem('palette-contrast-checker'));
+        var t = saved && saved.preferences && saved.preferences.theme;
+        if (t !== 'light' && t !== 'dark') {
+          t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { /* leave default (dark) */ }
+    })();
+  </script>
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -20,6 +34,14 @@
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <header class="app-header">
     <h1>Palette Contrast Checker</h1>
+    <button class="theme-switch" id="theme-toggle-btn" type="button" role="switch" aria-checked="false" title="Switch to light mode" aria-label="Switch to light mode">
+      <span class="theme-switch-track" aria-hidden="true">
+        <span class="theme-switch-thumb">
+          <svg class="icon icon-sun" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="icon icon-moon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        </span>
+      </span>
+    </button>
   </header>
 
   <main class="app-main" id="main-content">

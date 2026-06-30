@@ -38,6 +38,7 @@
 
   --color-cta: var(--yellow-gold);
   --color-cta-text: var(--gray-90);
+  --cta-border: transparent; /* delineates the CTA button; only needed on light bg */
   --color-link: var(--blue-light);
   --color-success: var(--green-light);
   --color-error: var(--red-light);
@@ -66,4 +67,41 @@
   /* === Result Badge Colors (pass = green, fail = red) === */
   --badge-pass: var(--green-light);
   --badge-fail: var(--red-light);
+}
+
+/*
+ * === Light mode (Command-line Chic light palette) ===
+ * The gray scale reverses (gray-00 = background, gray-90 = foreground) and
+ * accents use their *dark* variants on light backgrounds. Only the semantic
+ * tokens are remapped — the base scale and accents above are shared.
+ * Every pair below is verified at WCAG AAA (>=7:1 for text).
+ */
+:root[data-theme="light"] {
+  /* fCC layers light mode as an off-white *page* with white *panels* floating on
+     it (freecodecamp.org sets `body` to --secondary-background = gray-05 and
+     raised surfaces to --primary-background = gray-00). We mirror that: the page
+     and inset inputs are off-white, .section-panel cards are white, and nested
+     items recede to the gray-10 step. */
+  --primary-bg: var(--gray-05);        /* #f5f6f7 — page (body, header) + inset inputs */
+  --secondary-bg: var(--gray-00);      /* #ffffff — raised .section-panel cards */
+  --surface-bg: var(--gray-10);        /* #dfdfe2 — nested cards/items within panels */
+  --border-color: var(--gray-15);      /* #d0d0d5 */
+  --text-primary: var(--gray-90);      /* #0a0a23 */
+  --text-secondary: var(--gray-85);    /* #1b1b32 */
+  --text-tertiary: var(--gray-80);     /* #2a2a40 */
+  --text-muted: var(--gray-75);        /* #3b3b4f — AAA muted on #fff/#f5f6f7/#dfdfe2 */
+
+  --color-cta: var(--yellow-gold);     /* #ffbf00, dark text — AAA inside the button */
+  --cta-border: var(--yellow-dark);    /* #4d3800 — delineates the yellow button on white */
+  --color-link: var(--blue-dark);      /* #002ead */
+  --color-success: var(--green-dark);  /* #00471b */
+  --color-error: var(--red-dark);      /* #850000 */
+  --color-emphasis: var(--purple-dark);/* #5a01a7 */
+  --color-warning: var(--yellow-dark); /* #4d3800 */
+  /* --focus-outline stays --blue-mid (#198eee) — universal in both themes */
+
+  /* Badges are colored fills with `color: var(--primary-bg)` (white in light
+     mode), so the dark variants give white-on-dark badges (>=10:1 AAA). */
+  --badge-pass: var(--green-dark);     /* #00471b */
+  --badge-fail: var(--red-dark);       /* #850000 */
 }

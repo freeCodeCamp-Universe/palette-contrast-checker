@@ -28,6 +28,10 @@
 .btn-primary {
   background: var(--color-cta);
   color: var(--color-cta-text);
+  /* Transparent in dark mode (depth from luminance); a real edge in light mode
+     where the yellow fill alone is <3:1 against a white page. 1px in both modes
+     keeps the button size stable when toggling. */
+  border: 1px solid var(--cta-border);
 }
 
 .btn-secondary {
@@ -68,6 +72,76 @@
 .icon {
   display: inline-block;
   vertical-align: middle;
+}
+
+/* === Theme toggle switch === */
+.theme-switch {
+  background: transparent;
+  border: none;
+  padding: var(--space-xs);
+  margin: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+}
+
+.theme-switch-track {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+}
+
+/* The knob carries the icon of the *current* theme and slides to the lit side. */
+.theme-switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  /* Inverted: knob fill uses the page bg, the symbol uses the foreground — dark
+     knob + light symbol in dark mode, and vice versa. The fill matches the page
+     bg, so an outline (~14:1 vs the track) gives the knob a visible edge. */
+  background: var(--primary-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: left 0.15s ease;
+}
+
+.theme-switch-thumb .icon {
+  width: 12px;
+  height: 12px;
+}
+
+:root[data-theme="light"] .theme-switch-thumb {
+  left: calc(100% - 20px);
+}
+
+.theme-switch:focus-visible {
+  outline: 2px solid var(--focus-outline);
+  outline-offset: 2px;
+}
+
+/* Knob shows the current theme: moon in dark, sun in light. Driven by
+   data-theme so the FOUC head script shows the right icon before JS runs. */
+.theme-switch .icon-sun {
+  display: none;
+}
+:root[data-theme="light"] .theme-switch .icon-moon {
+  display: none;
+}
+:root[data-theme="light"] .theme-switch .icon-sun {
+  display: inline-block;
 }
 
 .btn-icon:hover:not(:disabled) {
@@ -220,6 +294,17 @@ input[type="range"] {
   background: var(--green-dark);
   color: var(--color-success);
   border: 1px solid var(--color-success);
+}
+
+/* Alerts keep a dark fill in BOTH themes, so a secondary button inside one must
+   stay light-on-dark — otherwise in light mode its text flips to dark navy and
+   disappears against the alert background. */
+.alert .btn-secondary {
+  color: var(--gray-05);
+  border-color: var(--gray-15);
+}
+.alert .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* === Modal === */
