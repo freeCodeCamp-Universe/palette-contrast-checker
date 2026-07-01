@@ -54,6 +54,11 @@
   padding: var(--space-xs) var(--space-sm);
 }
 
+.btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
 .btn-icon {
   background: transparent;
   border: none;

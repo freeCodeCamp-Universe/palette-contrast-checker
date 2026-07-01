@@ -85,28 +85,14 @@
 
         <!-- Analysis Controls -->
         <section class="section-panel" id="analysis-controls">
-          <button class="btn btn-primary" id="analyze-btn" style="width:100%" aria-disabled="true">
+          <button class="btn btn-primary btn-block" id="analyze-btn" aria-disabled="true">
             Analyze Palette
           </button>
           <div id="analysis-warning" class="alert alert-info" role="alert" hidden style="margin-top:var(--space-md)">
             <span>Your palette has more than 10 colors. Analysis may be slow or crash the browser.</span>
             <button class="btn btn-sm btn-primary" id="analyze-anyway-btn">Analyze Anyway</button>
           </div>
-        </section>
-
-        <!-- Save / Load / Import / Export -->
-        <section class="section-panel" id="storage-panel">
-          <h2>Save &amp; Export</h2>
-          <div class="storage-actions">
-            <button class="btn btn-secondary btn-sm" id="save-palette-btn">Save Palette</button>
-            <button class="btn btn-secondary btn-sm" id="load-palette-btn">My Palettes</button>
-            <button class="btn btn-secondary btn-sm" id="import-csv-btn">Import CSV</button>
-            <button class="btn btn-secondary btn-sm" id="export-csv-btn">Export CSV</button>
-            <button class="btn btn-secondary btn-sm" id="share-url-btn">Share URL</button>
-          </div>
-
-          <p id="storage-status" class="storage-status" role="status" aria-live="polite"></p>
-
+          <button class="btn btn-secondary btn-block" id="save-palette-btn" style="margin-top:var(--space-md)">Save Palette</button>
           <div id="save-dialog" hidden>
             <div class="save-dialog">
               <div class="form-group">
@@ -119,6 +105,19 @@
             <div id="save-overwrite-warning" class="alert alert-info" hidden style="margin-top:var(--space-sm)">
             </div>
           </div>
+        </section>
+
+        <!-- Save / Load / Import / Export -->
+        <section class="section-panel" id="storage-panel">
+          <h2>Save &amp; Export</h2>
+          <div class="storage-actions">
+            <button class="btn btn-secondary btn-sm" id="load-palette-btn">My Palettes</button>
+            <button class="btn btn-secondary btn-sm" id="import-csv-btn">Import CSV</button>
+            <button class="btn btn-secondary btn-sm" id="export-csv-btn">Export CSV</button>
+            <button class="btn btn-secondary btn-sm" id="share-url-btn">Share URL</button>
+          </div>
+
+          <p id="storage-status" class="storage-status" role="status" aria-live="polite"></p>
 
           <div id="load-dialog" hidden>
             <h3 class="saved-palettes-heading">My Palettes</h3>
