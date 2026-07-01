@@ -105,24 +105,23 @@
             <div id="save-overwrite-warning" class="alert alert-info" hidden style="margin-top:var(--space-sm)">
             </div>
           </div>
+          <button class="btn btn-secondary btn-block" id="load-palette-btn" style="margin-top:var(--space-sm)">My Palettes</button>
+          <div id="load-dialog" hidden>
+            <h3 class="saved-palettes-heading">My Palettes</h3>
+            <ul class="saved-palettes-list" id="saved-palettes-list"></ul>
+          </div>
         </section>
 
-        <!-- Save / Load / Import / Export -->
+        <!-- Import / Export / Share -->
         <section class="section-panel" id="storage-panel">
-          <h2>Save &amp; Export</h2>
+          <h2>Import &amp; Export</h2>
           <div class="storage-actions">
-            <button class="btn btn-secondary btn-sm" id="load-palette-btn">My Palettes</button>
             <button class="btn btn-secondary btn-sm" id="import-csv-btn">Import CSV</button>
             <button class="btn btn-secondary btn-sm" id="export-csv-btn">Export CSV</button>
             <button class="btn btn-secondary btn-sm" id="share-url-btn">Share URL</button>
           </div>
 
           <p id="storage-status" class="storage-status" role="status" aria-live="polite"></p>
-
-          <div id="load-dialog" hidden>
-            <h3 class="saved-palettes-heading">My Palettes</h3>
-            <ul class="saved-palettes-list" id="saved-palettes-list"></ul>
-          </div>
 
           <div class="export-group" id="analysis-export-group" hidden>
             <h3>Export Analysis</h3>
