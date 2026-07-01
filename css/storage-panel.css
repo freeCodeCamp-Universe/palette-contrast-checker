@@ -105,7 +105,8 @@
   margin-top: var(--space-md);
 }
 
-.export-group h3 {
+.export-group h3,
+.storage-actions h3 {
   width: 100%;
   font-size: 0.95rem;
   color: var(--text-tertiary);
