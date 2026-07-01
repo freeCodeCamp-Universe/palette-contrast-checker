@@ -62,10 +62,18 @@
   gap: var(--space-xs);
 }
 
+.palette-count-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  min-height: 1.75rem; /* reserve space so the list doesn't jump when the button appears */
+}
+
 .palette-count {
   font-size: 0.85rem;
   color: var(--text-muted);
-  margin-top: var(--space-md);
 }
 
 .color-validation {

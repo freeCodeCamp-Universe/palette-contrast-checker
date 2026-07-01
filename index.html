@@ -78,7 +78,10 @@
           </div>
           <div class="color-validation" id="color-validation" aria-live="polite"></div>
 
-          <div class="palette-count" id="palette-count" aria-live="polite" aria-atomic="true"></div>
+          <div class="palette-count-row">
+            <div class="palette-count" id="palette-count" aria-live="polite" aria-atomic="true"></div>
+            <button class="btn btn-secondary btn-sm" id="clear-palette-btn" type="button" hidden>Clear all</button>
+          </div>
           <ul class="palette-list" id="palette-list" aria-label="Palette colors">
           </ul>
         </section>
@@ -252,6 +255,18 @@
       <div class="modal-actions">
         <button class="btn btn-secondary" id="overwrite-cancel-btn">Cancel</button>
         <button class="btn btn-danger" id="overwrite-confirm-btn">Overwrite</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Confirmation Modal -->
+  <div class="modal-overlay" id="reset-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title">
+      <h3 id="reset-modal-title">Clear all colors?</h3>
+      <p id="reset-modal-desc"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="reset-cancel-btn" type="button">Cancel</button>
+        <button class="btn btn-danger" id="reset-confirm-btn" type="button">Clear all</button>
       </div>
     </div>
   </div>

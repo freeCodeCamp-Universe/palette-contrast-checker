@@ -5,7 +5,9 @@
 import { parseColor, canonicalize, identifyFormat } from '../lib/color-parse.js';
 import { findDuplicate } from '../lib/duplicates.js';
 import { generateId } from '../state/actions.js';
+import { clearWip } from '../state/persistence.js';
 import { initDuplicateResolver } from './duplicate-resolver.js';
+import { trapFocus } from '../lib/focus-trap.js';
 import { chevronUp, chevronDown, close } from '../lib/icons.js';
 
 export function initPaletteEditor(store) {
@@ -14,7 +16,16 @@ export function initPaletteEditor(store) {
   const eyedropperBtn = document.getElementById('eyedropper-btn');
   const paletteList = document.getElementById('palette-list');
   const paletteCount = document.getElementById('palette-count');
+  const clearBtn = document.getElementById('clear-palette-btn');
   const validation = document.getElementById('color-validation');
+
+  // Reset confirmation modal
+  const resetModal = document.getElementById('reset-modal');
+  const resetDesc = document.getElementById('reset-modal-desc');
+  const resetConfirm = document.getElementById('reset-confirm-btn');
+  const resetCancel = document.getElementById('reset-cancel-btn');
+  let removeResetTrap = null;
+  let resetTrigger = null;
 
   // EyeDropper availability
   if (!('EyeDropper' in window)) {
@@ -142,6 +153,40 @@ export function initPaletteEditor(store) {
     }
   });
 
+  // Clear the working palette back to empty. Reuses LOAD_PALETTE (which also
+  // clears results, suggestions, alerts, and color filters), then drops the
+  // recovery snapshot and the shared URL so a reload/share starts fresh. Saved
+  // named palettes live under a separate storage key and are left untouched.
+  function resetPalette() {
+    store.dispatch({ type: 'LOAD_PALETTE', payload: [] });
+    clearWip();
+    history.replaceState(null, '', window.location.pathname);
+    input.focus();
+  }
+
+  function closeResetModal() {
+    resetModal.hidden = true;
+    removeResetTrap?.();
+    removeResetTrap = null;
+    resetTrigger?.focus();
+  }
+
+  clearBtn.addEventListener('click', () => {
+    const count = store.getState().palette.length;
+    resetTrigger = document.activeElement;
+    resetDesc.textContent = `This removes all ${count} color${count !== 1 ? 's' : ''} from your palette. Saved palettes aren't affected.`;
+    resetModal.hidden = false;
+    removeResetTrap = trapFocus(resetModal, closeResetModal);
+    resetCancel.focus();
+  });
+
+  resetConfirm.addEventListener('click', () => {
+    closeResetModal();
+    resetPalette();
+  });
+
+  resetCancel.addEventListener('click', closeResetModal);
+
   // Render palette list
   function render() {
     const { palette } = store.getState();
@@ -189,6 +234,7 @@ export function initPaletteEditor(store) {
     paletteCount.textContent = palette.length > 0
       ? `${palette.length} color${palette.length !== 1 ? 's' : ''}`
       : '';
+    clearBtn.hidden = palette.length === 0;
 
     // Enable/disable analyze button
     const analyzeBtn = document.getElementById('analyze-btn');
