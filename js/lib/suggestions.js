@@ -97,8 +97,12 @@ function generatePaletteDerived(paletteRgbs, paletteHexes, mode) {
     }
   }
 
-  candidates.sort((a, b) => b.aaaCount - a.aaaCount || b.avgRatio - a.avgRatio);
-  return candidates.slice(0, 8);
+  // Drop candidates that don't accessibly pair with any palette color — a
+  // suggestion with no qualifying pairs does nothing to improve coverage.
+  return candidates
+    .filter((c) => c.pairs.length > 0)
+    .sort((a, b) => b.aaaCount - a.aaaCount || b.avgRatio - a.avgRatio)
+    .slice(0, 8);
 }
 
 function generateNeutrals(neutralPool, paletteRgbs, paletteHexes) {
@@ -116,8 +120,10 @@ function generateNeutrals(neutralPool, paletteRgbs, paletteHexes) {
     });
   }
 
-  candidates.sort((a, b) => b.aaaCount - a.aaaCount || b.avgRatio - a.avgRatio);
-  return candidates.slice(0, 8);
+  return candidates
+    .filter((c) => c.pairs.length > 0)
+    .sort((a, b) => b.aaaCount - a.aaaCount || b.avgRatio - a.avgRatio)
+    .slice(0, 8);
 }
 
 function scoreSuggestion(suggestionRgb, paletteRgbs) {

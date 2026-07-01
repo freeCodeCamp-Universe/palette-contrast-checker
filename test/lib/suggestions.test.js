@@ -8,17 +8,21 @@ describe('generateSuggestions', () => {
     { hex: '#0000ff' },
   ];
 
-  it('returns 6 dark and 6 light suggestions', () => {
+  it('returns up to 6 dark and 6 light suggestions', () => {
     const result = generateSuggestions(palette);
-    expect(result.dark).toHaveLength(6);
-    expect(result.light).toHaveLength(6);
+    expect(result.dark.length).toBeLessThanOrEqual(6);
+    expect(result.light.length).toBeLessThanOrEqual(6);
   });
 
-  it('includes both palette-derived and neutral types', () => {
+  it('includes at most 3 palette-derived and 3 neutral of each shade', () => {
     const result = generateSuggestions(palette);
     const darkTypes = result.dark.map((s) => s.type);
-    expect(darkTypes.filter((t) => t === 'palette-derived')).toHaveLength(3);
-    expect(darkTypes.filter((t) => t === 'neutral')).toHaveLength(3);
+    const derived = darkTypes.filter((t) => t === 'palette-derived').length;
+    const neutral = darkTypes.filter((t) => t === 'neutral').length;
+    expect(derived).toBeGreaterThanOrEqual(0);
+    expect(derived).toBeLessThanOrEqual(3);
+    expect(neutral).toBeGreaterThanOrEqual(0);
+    expect(neutral).toBeLessThanOrEqual(3);
   });
 
   it('does not include colors already in the palette', () => {
@@ -37,17 +41,26 @@ describe('generateSuggestions', () => {
     }
   });
 
+  it('only returns suggestions that have at least one qualifying pair', () => {
+    for (const p of [palette, [{ hex: '#000000' }, { hex: '#ffffff' }], [{ hex: '#ff0000' }, { hex: '#ff0033' }]]) {
+      const result = generateSuggestions(p);
+      for (const s of [...result.dark, ...result.light]) {
+        expect(s.pairs.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
   it('works with a 2-color palette', () => {
     const small = [{ hex: '#000000' }, { hex: '#ffffff' }];
     const result = generateSuggestions(small);
-    expect(result.dark).toHaveLength(6);
-    expect(result.light).toHaveLength(6);
+    expect(result.dark.length).toBeLessThanOrEqual(6);
+    expect(result.light.length).toBeLessThanOrEqual(6);
   });
 
   it('works with similar colors', () => {
     const similar = [{ hex: '#ff0000' }, { hex: '#ff0033' }];
     const result = generateSuggestions(similar);
-    expect(result.dark.length + result.light.length).toBe(12);
+    expect(result.dark.length + result.light.length).toBeLessThanOrEqual(12);
   });
 
   it('varies across repeated calls (Generate New Suggestions)', () => {

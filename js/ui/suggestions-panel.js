@@ -26,6 +26,16 @@ export function initSuggestionsPanel(store) {
     selected.clear();
     addBtn.setAttribute('aria-disabled', 'true');
 
+    // When nothing qualifies at all, show a single message instead of two
+    // empty columns.
+    if (suggestions.dark.length === 0 && suggestions.light.length === 0) {
+      const empty = document.createElement('p');
+      empty.className = 'text-muted';
+      empty.textContent = "No suggestions could improve this palette's coverage.";
+      grid.appendChild(empty);
+      return;
+    }
+
     const darkCol = createColumn('Dark suggestions', suggestions.dark);
     const lightCol = createColumn('Light suggestions', suggestions.light);
     grid.appendChild(darkCol);
@@ -36,6 +46,14 @@ export function initSuggestionsPanel(store) {
     const col = document.createElement('div');
     col.className = 'suggestions-column';
     col.innerHTML = `<h3>${title}</h3>`;
+
+    if (items.length === 0) {
+      const empty = document.createElement('p');
+      empty.className = 'text-muted';
+      empty.textContent = 'No suggestions available.';
+      col.appendChild(empty);
+      return col;
+    }
 
     for (const item of items) {
       const el = document.createElement('label');
@@ -64,9 +82,7 @@ export function initSuggestionsPanel(store) {
       info.innerHTML = `
         <span class="suggestion-hex mono">${item.hex}</span>
         <span class="suggestion-type">${item.type}</span>
-        ${item.pairs && item.pairs.length > 0
-          ? `<span class="suggestion-pairs">Pairs with: ${item.pairs.map((p) => p.hex).join(', ')}</span>`
-          : '<span class="suggestion-pairs text-muted">No qualifying pairs</span>'}
+        <span class="suggestion-pairs">Pairs with: ${item.pairs.map((p) => p.hex).join(', ')}</span>
       `;
 
       el.appendChild(checkbox);
