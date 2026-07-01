@@ -52,18 +52,14 @@ export function initAnalysisRunner(store) {
       const results = analyzeAllPairs(palette);
       store.dispatch({ type: 'SET_RESULTS', payload: results });
 
+      // We only reach here when there are no duplicates, so clear any lingering
+      // duplicate-blocking alert from a previous attempt.
+      store.dispatch({ type: 'SET_ALERTS', payload: [] });
+
+      // Coverage gaps are now surfaced as callouts in the Results panel
+      // (results-view.js); here we only need the AAA-normal-text flag to decide
+      // whether to auto-generate suggestions.
       const coverage = findMissingCoverage(results);
-      const alerts = [];
-      if (coverage.normalTextMissing) {
-        alerts.push('No color pair in your palette passes for normal text (needs 4.5:1 minimum).');
-      }
-      if (coverage.largeTextMissing) {
-        alerts.push('No color pair in your palette passes for large text (needs 3:1 minimum).');
-      }
-      if (coverage.nonTextMissing) {
-        alerts.push('No color pair in your palette passes for non-text UI elements (needs 3:1 minimum).');
-      }
-      store.dispatch({ type: 'SET_ALERTS', payload: alerts });
 
       // Auto-trigger suggestions when no AAA normal text pair
       if (coverage.aaaNormalTextMissing) {

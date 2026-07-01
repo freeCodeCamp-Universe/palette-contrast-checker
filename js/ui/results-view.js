@@ -2,13 +2,22 @@
  * Results view — renders result cards with live text previews.
  */
 
+import { findMissingCoverage } from '../lib/contrast.js';
+import { info } from '../lib/icons.js';
+
 export function initResultsView(store) {
   const section = document.getElementById('results-section');
   const grid = document.getElementById('results-grid');
   const countEl = document.getElementById('results-count');
+  const coverageNotes = document.getElementById('coverage-notes');
+  const statusEl = document.getElementById('results-status');
   const exportGroup = document.getElementById('analysis-export-group');
   // Preview Settings only affect result cards, so they share the results' visibility.
   const previewControls = document.getElementById('preview-controls');
+
+  // Track the last results set so filter/sort re-renders (same reference) don't
+  // re-announce; only a genuine new analysis (SET_RESULTS) swaps the reference.
+  let prevResults = null;
 
   function render() {
     const { results, preferences } = store.getState();
@@ -17,12 +26,21 @@ export function initResultsView(store) {
       section.hidden = true;
       exportGroup.hidden = true;
       previewControls.hidden = true;
+      statusEl.textContent = '';
+      prevResults = null;
       return;
     }
 
     section.hidden = false;
     exportGroup.hidden = false;
     previewControls.hidden = false;
+
+    if (results !== prevResults) {
+      announceResults(statusEl, prevResults === null ? 'Results are available.' : 'Results updated.');
+      prevResults = results;
+    }
+
+    renderCoverageNotes(coverageNotes, results);
 
     const filtered = applyFilters(results, preferences.activeFilters);
     const sorted = applySort(filtered, preferences.activeSort);
@@ -36,6 +54,43 @@ export function initResultsView(store) {
   }
 
   store.subscribe(render);
+}
+
+// Clear then set on the next tick so two consecutive analyses that produce the
+// same text (e.g. "Results updated." twice) still re-announce — screen readers
+// only announce a live region when its text actually changes.
+function announceResults(statusEl, message) {
+  statusEl.textContent = '';
+  const schedule = (typeof requestAnimationFrame === 'function' ? requestAnimationFrame : setTimeout);
+  schedule(() => {
+    statusEl.textContent = message;
+  });
+}
+
+// Coverage gaps describe the whole palette, so they're computed from the full
+// unfiltered results. Rendered as plain callouts (no role/aria-live) inside the
+// Results panel — read in normal flow, not announced.
+function renderCoverageNotes(container, results) {
+  container.innerHTML = '';
+  const coverage = findMissingCoverage(results);
+  const notes = [];
+  if (coverage.normalTextMissing) {
+    notes.push('No color pair in your palette passes for normal text (needs 4.5:1 minimum).');
+  }
+  if (coverage.largeTextMissing) {
+    notes.push('No color pair in your palette passes for large text (needs 3:1 minimum).');
+  }
+  if (coverage.nonTextMissing) {
+    notes.push('No color pair in your palette passes for non-text UI elements (needs 3:1 minimum).');
+  }
+
+  for (const message of notes) {
+    const div = document.createElement('div');
+    div.className = 'alert alert-info';
+    div.style.marginBottom = 'var(--space-md)';
+    div.innerHTML = `${info}<span>${escapeHtml(message)}</span>`;
+    container.appendChild(div);
+  }
 }
 
 function createResultCard(result, preferences) {

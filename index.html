@@ -139,6 +139,9 @@
         <!-- Alerts -->
         <div id="alerts-container" aria-live="polite"></div>
 
+        <!-- Polite announcement when results are (re)populated -->
+        <div id="results-status" class="sr-only" role="status" aria-live="polite"></div>
+
         <!-- Preview Controls -->
         <section class="section-panel" id="preview-controls" hidden>
           <h2>Preview Settings</h2>
@@ -180,6 +183,7 @@
         <!-- Results -->
         <section class="section-panel" id="results-section" hidden>
           <h2>Results</h2>
+          <div id="coverage-notes"></div>
           <div class="results-toolbar" id="results-toolbar">
             <select id="filter-level" class="form-input" aria-label="Filter by level">
               <option value="all">All levels</option>
