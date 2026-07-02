@@ -15,6 +15,7 @@ import { generateId } from '../state/actions.js';
 import { encodePaletteToHash } from '../lib/palette-url.js';
 import { serializePaletteCsv, parsePaletteCsv } from '../lib/csv-io.js';
 import { exportAsMarkdown, exportAsCsv, exportAsJson } from '../lib/export-analysis.js';
+import { exportAsPdf } from '../lib/export-pdf.js';
 import { check } from '../lib/icons.js';
 
 export function initStoragePanel(store) {
@@ -35,6 +36,7 @@ export function initStoragePanel(store) {
   const exportMdBtn = document.getElementById('export-md-btn');
   const exportAnalysisCsvBtn = document.getElementById('export-analysis-csv-btn');
   const exportJsonBtn = document.getElementById('export-json-btn');
+  const exportPdfBtn = document.getElementById('export-pdf-btn');
 
   const overwriteModal = document.getElementById('overwrite-modal');
   const overwriteDesc = document.getElementById('overwrite-modal-desc');
@@ -256,6 +258,13 @@ export function initStoragePanel(store) {
     if (!results) return;
     const json = exportAsJson(palette, results);
     downloadFile('analysis.json', json, 'application/json');
+  });
+
+  exportPdfBtn.addEventListener('click', () => {
+    const { palette, results } = store.getState();
+    if (!results) return;
+    const bytes = exportAsPdf(palette, results);
+    downloadFile('analysis.pdf', bytes, 'application/pdf');
   });
 
   // Actions that operate on the current palette make no sense when it's empty.

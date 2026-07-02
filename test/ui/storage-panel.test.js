@@ -59,6 +59,19 @@ describe('storage panel — palette-consuming controls', () => {
   });
 });
 
+describe('storage panel — analysis export buttons', () => {
+  beforeEach(() => {
+    loadAppDom();
+    resetLocalStorage();
+  });
+
+  it('includes an Export PDF button in the analysis export group', () => {
+    const btn = document.getElementById('export-pdf-btn');
+    expect(btn).not.toBeNull();
+    expect(btn.closest('#analysis-export-group')).not.toBeNull();
+  });
+});
+
 describe('storage panel — palette name length', () => {
   beforeEach(() => {
     loadAppDom();
