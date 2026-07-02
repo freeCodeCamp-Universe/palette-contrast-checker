@@ -11,9 +11,6 @@ export function initResultsView(store) {
   const countEl = document.getElementById('results-count');
   const coverageNotes = document.getElementById('coverage-notes');
   const statusEl = document.getElementById('results-status');
-  const exportGroup = document.getElementById('analysis-export-group');
-  // Preview Settings only affect result cards, so they share the results' visibility.
-  const previewControls = document.getElementById('preview-controls');
 
   // Track the last results set so filter/sort re-renders (same reference) don't
   // re-announce; only a genuine new analysis (SET_RESULTS) swaps the reference.
@@ -24,16 +21,12 @@ export function initResultsView(store) {
 
     if (!results || results.length === 0) {
       section.hidden = true;
-      exportGroup.hidden = true;
-      previewControls.hidden = true;
       statusEl.textContent = '';
       prevResults = null;
       return;
     }
 
     section.hidden = false;
-    exportGroup.hidden = false;
-    previewControls.hidden = false;
 
     if (results !== prevResults) {
       announceResults(statusEl, prevResults === null ? 'Results are available.' : 'Results updated.');

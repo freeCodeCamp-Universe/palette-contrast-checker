@@ -1,3 +1,17 @@
+/* Card heading row: title on the left, panel-level tools on the right. */
+.results-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-md);
+}
+
+.results-header h2 {
+  margin-bottom: 0;
+  margin-right: auto;
+}
+
 .results-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -16,6 +30,21 @@
   font-size: 0.85rem;
   color: var(--text-muted);
   margin-left: auto;
+}
+
+/* Collapsible panels (Preview Settings, Export) toggled from the toolbar. */
+.results-disclosure {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.results-disclosure h3 {
+  font-size: 0.95rem;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-sm);
 }
 
 .results-grid {

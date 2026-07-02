@@ -5,10 +5,17 @@
 import { savePreferences } from '../state/persistence.js';
 
 export function initPreviewControls(store) {
+  const toggle = document.getElementById('preview-settings-toggle');
+  const panel = document.getElementById('preview-controls');
   const textInput = document.getElementById('preview-text-input');
   const fontSelect = document.getElementById('font-family-select');
   const sizeSlider = document.getElementById('font-size-slider');
   const sizeValue = document.getElementById('font-size-value');
+
+  toggle.addEventListener('click', () => {
+    panel.hidden = !panel.hidden;
+    toggle.setAttribute('aria-expanded', String(!panel.hidden));
+  });
 
   // Restore from state
   const { preferences } = store.getState();

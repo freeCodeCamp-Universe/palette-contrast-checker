@@ -84,11 +84,8 @@
           </div>
           <ul class="palette-list" id="palette-list" aria-label="Palette colors">
           </ul>
-        </section>
 
-        <!-- Analysis Controls -->
-        <section class="section-panel" id="analysis-controls">
-          <button class="btn btn-primary btn-block" id="analyze-btn" aria-disabled="true">
+          <button class="btn btn-primary btn-block" id="analyze-btn" aria-disabled="true" style="margin-top:var(--space-md)">
             Analyze Palette
           </button>
           <div id="analysis-warning" class="alert alert-info" role="alert" hidden style="margin-top:var(--space-md)">
@@ -113,27 +110,15 @@
             <h3 class="saved-palettes-heading">My Palettes</h3>
             <ul class="saved-palettes-list" id="saved-palettes-list"></ul>
           </div>
-        </section>
 
-        <!-- Import / Export / Share -->
-        <section class="section-panel" id="storage-panel">
-          <h2>Import &amp; Export</h2>
-          <div class="storage-actions">
-            <h3>Palette</h3>
+          <div class="storage-actions" style="margin-top:var(--space-md)">
+            <h3>Import &amp; Export Palette</h3>
             <button class="btn btn-secondary btn-sm" id="import-csv-btn">Import CSV</button>
             <button class="btn btn-secondary btn-sm" id="export-csv-btn">Export CSV</button>
             <button class="btn btn-secondary btn-sm" id="share-url-btn">Share URL</button>
           </div>
 
           <p id="storage-status" class="storage-status" role="status" aria-live="polite"></p>
-
-          <div class="export-group" id="analysis-export-group" hidden>
-            <h3>Analysis</h3>
-            <button class="btn btn-secondary btn-sm" id="export-md-btn">Export Markdown</button>
-            <button class="btn btn-secondary btn-sm" id="export-analysis-csv-btn">Export CSV</button>
-            <button class="btn btn-secondary btn-sm" id="export-json-btn">Export JSON</button>
-            <button class="btn btn-secondary btn-sm" id="export-pdf-btn">Export PDF</button>
-          </div>
         </section>
       </div>
 
@@ -145,47 +130,13 @@
         <!-- Polite announcement when results are (re)populated -->
         <div id="results-status" class="sr-only" role="status" aria-live="polite"></div>
 
-        <!-- Preview Controls -->
-        <section class="section-panel" id="preview-controls" hidden>
-          <h2>Preview Settings</h2>
-          <div class="form-group">
-            <label for="preview-text-input">Preview text</label>
-            <textarea
-              id="preview-text-input"
-              class="form-input"
-              rows="3"
-            >The quick brown fox jumps over the lazy dog.</textarea>
-          </div>
-          <div class="form-group" style="margin-top: var(--space-md)">
-            <label for="font-family-select">Font family</label>
-            <select id="font-family-select" class="form-input">
-              <option value="Arial">Arial</option>
-              <option value="Georgia">Georgia</option>
-              <option value="Verdana">Verdana</option>
-              <option value="Trebuchet MS">Trebuchet MS</option>
-              <option value="Times New Roman">Times New Roman</option>
-              <option value="Courier New">Courier New</option>
-              <option value="system-ui">system-ui</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-top: var(--space-md)">
-            <label for="font-size-slider">
-              Font size: <span id="font-size-value" aria-live="polite" aria-atomic="true">18</span>px
-            </label>
-            <input
-              type="range"
-              id="font-size-slider"
-              min="12"
-              max="48"
-              value="18"
-              step="1"
-            >
-          </div>
-        </section>
-
-        <!-- Results -->
+        <!-- Contrast Analysis -->
         <section class="section-panel" id="results-section" hidden>
-          <h2>Results</h2>
+          <div class="results-header">
+            <h2>Contrast Analysis</h2>
+            <button class="btn btn-secondary btn-sm" id="preview-settings-toggle" aria-expanded="false" aria-controls="preview-controls">Preview Settings</button>
+            <button class="btn btn-secondary btn-sm" id="export-analysis-toggle" aria-expanded="false" aria-controls="analysis-export-group">Export Analysis</button>
+          </div>
           <div id="coverage-notes"></div>
           <div class="results-toolbar" id="results-toolbar">
             <select id="filter-level" class="form-input" aria-label="Filter by level">
@@ -215,6 +166,52 @@
             </select>
             <span class="results-count" id="results-count" aria-live="polite" aria-atomic="true"></span>
           </div>
+
+          <div class="results-disclosure" id="preview-controls" hidden>
+            <h3>Preview Settings</h3>
+            <div class="form-group">
+              <label for="preview-text-input">Preview text</label>
+              <textarea
+                id="preview-text-input"
+                class="form-input"
+                rows="3"
+              >The quick brown fox jumps over the lazy dog.</textarea>
+            </div>
+            <div class="form-group" style="margin-top: var(--space-md)">
+              <label for="font-family-select">Font family</label>
+              <select id="font-family-select" class="form-input">
+                <option value="Arial">Arial</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Verdana">Verdana</option>
+                <option value="Trebuchet MS">Trebuchet MS</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Courier New">Courier New</option>
+                <option value="system-ui">system-ui</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-top: var(--space-md)">
+              <label for="font-size-slider">
+                Font size: <span id="font-size-value" aria-live="polite" aria-atomic="true">18</span>px
+              </label>
+              <input
+                type="range"
+                id="font-size-slider"
+                min="12"
+                max="48"
+                value="18"
+                step="1"
+              >
+            </div>
+          </div>
+
+          <div class="results-disclosure export-group" id="analysis-export-group" hidden>
+            <h3>Export Analysis</h3>
+            <button class="btn btn-secondary btn-sm" id="export-md-btn">Export Markdown</button>
+            <button class="btn btn-secondary btn-sm" id="export-analysis-csv-btn">Export CSV</button>
+            <button class="btn btn-secondary btn-sm" id="export-json-btn">Export JSON</button>
+            <button class="btn btn-secondary btn-sm" id="export-pdf-btn">Export PDF</button>
+          </div>
+
           <div class="results-grid" id="results-grid"></div>
         </section>
 

@@ -63,4 +63,13 @@
   .two-column {
     grid-template-columns: 1fr;
   }
+
+  /* Tighter cards on small screens so the analysis stays near the fold. */
+  .section-panel {
+    padding: var(--space-md);
+  }
+
+  .app-main {
+    padding: var(--space-md);
+  }
 }

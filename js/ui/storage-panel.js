@@ -37,6 +37,8 @@ export function initStoragePanel(store) {
   const exportAnalysisCsvBtn = document.getElementById('export-analysis-csv-btn');
   const exportJsonBtn = document.getElementById('export-json-btn');
   const exportPdfBtn = document.getElementById('export-pdf-btn');
+  const exportToggle = document.getElementById('export-analysis-toggle');
+  const exportGroup = document.getElementById('analysis-export-group');
 
   const overwriteModal = document.getElementById('overwrite-modal');
   const overwriteDesc = document.getElementById('overwrite-modal-desc');
@@ -239,6 +241,11 @@ export function initStoragePanel(store) {
   });
 
   // Export analysis
+  exportToggle.addEventListener('click', () => {
+    exportGroup.hidden = !exportGroup.hidden;
+    exportToggle.setAttribute('aria-expanded', String(!exportGroup.hidden));
+  });
+
   exportMdBtn.addEventListener('click', () => {
     const { palette, results } = store.getState();
     if (!results) return;
