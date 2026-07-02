@@ -15,7 +15,7 @@ export function initAnalysisRunner(store) {
 
   let pendingAnalysis = false;
 
-  function runAnalysis() {
+  function runAnalysis(shouldScroll = false) {
     const { palette } = store.getState();
 
     if (palette.length < 2) return;
@@ -68,16 +68,34 @@ export function initAnalysisRunner(store) {
       }
 
       store.dispatch({ type: 'SET_ANALYSIS_RUNNING', payload: false });
+
+      if (shouldScroll) scrollToResults();
     }, 10);
   }
 
-  analyzeBtn.addEventListener('click', () => {
+  // Bring the Contrast Analysis panel into view when an explicit Analyze
+  // lands with it off-screen (on mobile it starts below the fold). Loading a
+  // shared URL auto-clicks Analyze (app.js triggerAnalyze), so the button
+  // paths gate on event.isTrusted — only a real user click scrolls.
+  function scrollToResults() {
+    const section = document.getElementById('results-section');
+    if (section.hidden || typeof section.scrollIntoView !== 'function') return;
+    const rect = section.getBoundingClientRect();
+    if (rect.top > window.innerHeight * 0.5 || rect.bottom < 0) {
+      const reduceMotion =
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      section.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    }
+  }
+
+  analyzeBtn.addEventListener('click', (event) => {
     if (analyzeBtn.getAttribute('aria-disabled') === 'true') return;
-    runAnalysis();
+    runAnalysis(event.isTrusted);
   });
-  analyzeAnywayBtn.addEventListener('click', () => {
+  analyzeAnywayBtn.addEventListener('click', (event) => {
     pendingAnalysis = true;
-    runAnalysis();
+    runAnalysis(event.isTrusted);
   });
 
   // The >10-color warning is shown on Analyze; clear it once the palette is
