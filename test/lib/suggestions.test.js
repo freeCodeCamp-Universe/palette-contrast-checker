@@ -1,5 +1,59 @@
 import { describe, it, expect } from 'vitest';
-import { generateSuggestions, bestCheckLabel } from '../../js/lib/suggestions.js';
+import {
+  generateSuggestions,
+  bestCheckLabel,
+  smallestMissingThreshold,
+} from '../../js/lib/suggestions.js';
+import { hexToRgb } from '../../js/lib/color-convert.js';
+
+function toRgbs(hexes) {
+  return hexes.map((hex) => ({ hex, ...hexToRgb(hex) }));
+}
+
+describe('smallestMissingThreshold', () => {
+  it('is 3 when no pair reaches any level', () => {
+    expect(smallestMissingThreshold(toRgbs(['#ff0000', '#ff0033']))).toBe(3);
+  });
+
+  it('is 3 for a single-color palette (no pairs at all)', () => {
+    expect(smallestMissingThreshold(toRgbs(['#ff0000']))).toBe(3);
+  });
+
+  it('is 4.5 when the palette only covers the 3:1 level', () => {
+    // #5966f5 vs #380a0a is ~3.81:1 — large text AA but not normal text AA.
+    expect(smallestMissingThreshold(toRgbs(['#5966f5', '#380a0a']))).toBe(4.5);
+  });
+
+  it('is Infinity when every level is covered', () => {
+    expect(smallestMissingThreshold(toRgbs(['#000000', '#ffffff']))).toBe(Infinity);
+  });
+});
+
+describe('coverage filter', () => {
+  it('only suggests colors that add missing coverage', () => {
+    // This palette already covers large-text/non-text AA (best pair ~3.81:1)
+    // but lacks any normal-text AA pair, so every suggestion must bring a
+    // pairing at 4.5:1 or better.
+    const palette = [
+      { hex: '#dd0203' },
+      { hex: '#5966f5' },
+      { hex: '#380a0a' },
+      { hex: '#191970' },
+    ];
+    const result = generateSuggestions(palette);
+    const all = [...result.dark, ...result.light];
+    expect(all.length).toBeGreaterThan(0);
+    for (const s of all) {
+      expect(Math.max(...s.pairs.map((p) => p.ratio)), s.hex).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it('suggests nothing when the palette already covers every level', () => {
+    const result = generateSuggestions([{ hex: '#000000' }, { hex: '#ffffff' }]);
+    expect(result.dark).toHaveLength(0);
+    expect(result.light).toHaveLength(0);
+  });
+});
 
 describe('bestCheckLabel', () => {
   it('labels the strongest check the best pair satisfies', () => {

@@ -1,6 +1,9 @@
 /**
  * Color suggestion engine.
- * Generates 12 suggestions: 6 dark + 6 light, half palette-derived, half neutral.
+ * Generates up to 12 suggestions: 6 dark + 6 light, half palette-derived,
+ * half neutral. Only colors that add contrast coverage the palette is
+ * missing qualify — a suggestion that merely repeats an already-satisfied
+ * level does nothing to improve the palette.
  */
 
 import { hexToRgb, rgbToHex, rgbToHsl, hslToRgb } from './color-convert.js';
@@ -29,14 +32,32 @@ export function bestCheckLabel(pairs) {
   return 'Large text: AA';
 }
 
+// WCAG ratio thresholds, ascending: large-text/non-text AA (3), normal-text
+// AA / large-text AAA (4.5), normal-text AAA (7).
+const LEVELS = [3, 4.5, 7];
+
+// The smallest WCAG threshold no existing palette pair reaches. Suggestions
+// whose best pairing falls below it can only duplicate coverage the palette
+// already has. Infinity when every level is already covered.
+export function smallestMissingThreshold(paletteRgbs) {
+  let maxRatio = 0;
+  for (let i = 0; i < paletteRgbs.length; i++) {
+    for (let j = i + 1; j < paletteRgbs.length; j++) {
+      maxRatio = Math.max(maxRatio, contrastRatio(paletteRgbs[i], paletteRgbs[j]));
+    }
+  }
+  return LEVELS.find((t) => maxRatio < t) ?? Infinity;
+}
+
 export function generateSuggestions(palette) {
   const paletteHexes = new Set(palette.map((c) => c.hex.toLowerCase()));
   const paletteRgbs = palette.map((c) => ({ hex: c.hex, ...hexToRgb(c.hex) }));
+  const minMissing = smallestMissingThreshold(paletteRgbs);
 
-  const darkDerived = generatePaletteDerived(paletteRgbs, paletteHexes, 'dark');
-  const darkNeutral = generateNeutrals(DARK_NEUTRALS, paletteRgbs, paletteHexes);
-  const lightDerived = generatePaletteDerived(paletteRgbs, paletteHexes, 'light');
-  const lightNeutral = generateNeutrals(LIGHT_NEUTRALS, paletteRgbs, paletteHexes);
+  const darkDerived = generatePaletteDerived(paletteRgbs, paletteHexes, 'dark', minMissing);
+  const darkNeutral = generateNeutrals(DARK_NEUTRALS, paletteRgbs, paletteHexes, minMissing);
+  const lightDerived = generatePaletteDerived(paletteRgbs, paletteHexes, 'light', minMissing);
+  const lightNeutral = generateNeutrals(LIGHT_NEUTRALS, paletteRgbs, paletteHexes, minMissing);
 
   // Pick 3 of each kind at random from the top-scoring candidates so that
   // "Generate New Suggestions" produces fresh (but still good) options on each
@@ -59,7 +80,7 @@ function pickRandom(items, count) {
   return out;
 }
 
-function generatePaletteDerived(paletteRgbs, paletteHexes, mode) {
+function generatePaletteDerived(paletteRgbs, paletteHexes, mode, minMissing) {
   const candidates = [];
   const isDark = mode === 'dark';
   const targetLRange = isDark ? [8, 18] : [85, 95];
@@ -108,15 +129,15 @@ function generatePaletteDerived(paletteRgbs, paletteHexes, mode) {
     }
   }
 
-  // Drop candidates that don't accessibly pair with any palette color — a
-  // suggestion with no qualifying pairs does nothing to improve coverage.
+  // Keep only candidates whose best pairing reaches a level the palette is
+  // missing — anything weaker just duplicates existing coverage.
   return candidates
-    .filter((c) => c.pairs.length > 0)
+    .filter((c) => c.pairs.some((p) => p.ratio >= minMissing))
     .sort((a, b) => b.aaaCount - a.aaaCount || b.avgRatio - a.avgRatio)
     .slice(0, 8);
 }
 
-function generateNeutrals(neutralPool, paletteRgbs, paletteHexes) {
+function generateNeutrals(neutralPool, paletteRgbs, paletteHexes, minMissing) {
   const candidates = [];
 
   for (const hex of neutralPool) {
@@ -132,7 +153,7 @@ function generateNeutrals(neutralPool, paletteRgbs, paletteHexes) {
   }
 
   return candidates
-    .filter((c) => c.pairs.length > 0)
+    .filter((c) => c.pairs.some((p) => p.ratio >= minMissing))
     .sort((a, b) => b.aaaCount - a.aaaCount || b.avgRatio - a.avgRatio)
     .slice(0, 8);
 }
