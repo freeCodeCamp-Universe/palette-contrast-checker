@@ -1,5 +1,7 @@
 /**
- * Storage panel — save/load palettes, import/export CSV, share URL.
+ * Storage controls — save/load palettes, palette import/export/share (in the
+ * Palette card) and the analysis export disclosure (in the Contrast Analysis
+ * card).
  */
 
 import { trapFocus } from '../lib/focus-trap.js';

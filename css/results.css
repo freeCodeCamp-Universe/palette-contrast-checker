@@ -32,7 +32,8 @@
   margin-left: auto;
 }
 
-/* Collapsible panels (Preview Settings, Export) toggled from the toolbar. */
+/* Collapsible panels (Preview Settings, Export Analysis) toggled from the
+   card heading row. */
 .results-disclosure {
   background: var(--surface-bg);
   border: 1px solid var(--border-color);

@@ -62,7 +62,7 @@ function announceResults(statusEl, message) {
 
 // Coverage gaps describe the whole palette, so they're computed from the full
 // unfiltered results. Rendered as plain callouts (no role/aria-live) inside the
-// Results panel — read in normal flow, not announced.
+// Contrast Analysis panel — read in normal flow, not announced.
 function renderCoverageNotes(container, results) {
   container.innerHTML = '';
   const coverage = findMissingCoverage(results);
@@ -113,14 +113,16 @@ function createResultCard(result, preferences) {
   ratio.textContent = `${result.contrastRatio}:1`;
 
   // Split each text criterion into its own AA and AAA pass/fail badge so the
-  // level reached is explicit. Non-text contrast (WCAG 1.4.11) only defines a
-  // single 3:1 level, so it stays as one badge.
+  // level reached is explicit; non-text contrast (WCAG 1.4.11) only defines a
+  // single 3:1 level, so it stays as one badge. Ordered strictest requirement
+  // first — Normal AAA (7:1) down to Non-text (3:1) — so fails always come
+  // before passes.
   const badges = document.createElement('ul');
   badges.className = 'result-card-badges';
-  badges.appendChild(makeBadge('Normal text AA', result.normalText !== 'fail'));
   badges.appendChild(makeBadge('Normal text AAA', result.normalText === 'AAA'));
-  badges.appendChild(makeBadge('Large text AA', result.largeText !== 'fail'));
+  badges.appendChild(makeBadge('Normal text AA', result.normalText !== 'fail'));
   badges.appendChild(makeBadge('Large text AAA', result.largeText === 'AAA'));
+  badges.appendChild(makeBadge('Large text AA', result.largeText !== 'fail'));
   badges.appendChild(makeBadge('Non-text', result.nonText !== 'fail'));
 
   card.appendChild(header);

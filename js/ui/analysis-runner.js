@@ -56,7 +56,7 @@ export function initAnalysisRunner(store) {
       // duplicate-blocking alert from a previous attempt.
       store.dispatch({ type: 'SET_ALERTS', payload: [] });
 
-      // Coverage gaps are now surfaced as callouts in the Results panel
+      // Coverage gaps are now surfaced as callouts in the Contrast Analysis panel
       // (results-view.js); here we only need the AAA-normal-text flag to decide
       // whether to auto-generate suggestions.
       const coverage = findMissingCoverage(results);
