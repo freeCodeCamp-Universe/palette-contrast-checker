@@ -18,6 +18,17 @@ const LIGHT_NEUTRALS = [
   '#f0f0f5', '#e8e8f0',
 ];
 
+// Human label for the strongest WCAG check a suggestion satisfies with any
+// of its qualifying pairs. Pairs only exist at >= 3:1, so the weakest label
+// is the shared large-text / non-text AA level.
+export function bestCheckLabel(pairs) {
+  if (pairs.length === 0) return null;
+  const best = Math.max(...pairs.map((p) => p.ratio));
+  if (best >= 7) return 'Normal text: AAA';
+  if (best >= 4.5) return 'Normal text: AA';
+  return 'Large text: AA';
+}
+
 export function generateSuggestions(palette) {
   const paletteHexes = new Set(palette.map((c) => c.hex.toLowerCase()));
   const paletteRgbs = palette.map((c) => ({ hex: c.hex, ...hexToRgb(c.hex) }));

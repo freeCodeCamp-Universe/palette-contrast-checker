@@ -3,7 +3,7 @@
  */
 
 import { generateId } from '../state/actions.js';
-import { generateSuggestions } from '../lib/suggestions.js';
+import { generateSuggestions, bestCheckLabel } from '../lib/suggestions.js';
 
 export function initSuggestionsPanel(store) {
   const section = document.getElementById('suggestions-section');
@@ -88,6 +88,14 @@ export function initSuggestionsPanel(store) {
       el.appendChild(checkbox);
       el.appendChild(swatch);
       el.appendChild(info);
+
+      const best = bestCheckLabel(item.pairs);
+      if (best) {
+        const badge = document.createElement('span');
+        badge.className = 'badge badge-pass suggestion-best';
+        badge.textContent = best;
+        el.appendChild(badge);
+      }
       col.appendChild(el);
     }
 

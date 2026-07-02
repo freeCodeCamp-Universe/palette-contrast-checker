@@ -1,5 +1,22 @@
 import { describe, it, expect } from 'vitest';
-import { generateSuggestions } from '../../js/lib/suggestions.js';
+import { generateSuggestions, bestCheckLabel } from '../../js/lib/suggestions.js';
+
+describe('bestCheckLabel', () => {
+  it('labels the strongest check the best pair satisfies', () => {
+    expect(bestCheckLabel([{ ratio: 3.2 }, { ratio: 8.1 }])).toBe('Normal text: AAA');
+    expect(bestCheckLabel([{ ratio: 4.6 }])).toBe('Normal text: AA');
+    expect(bestCheckLabel([{ ratio: 3.2 }, { ratio: 4.1 }])).toBe('Large text: AA');
+  });
+
+  it('handles threshold boundaries exactly', () => {
+    expect(bestCheckLabel([{ ratio: 7 }])).toBe('Normal text: AAA');
+    expect(bestCheckLabel([{ ratio: 4.5 }])).toBe('Normal text: AA');
+  });
+
+  it('returns null when there are no qualifying pairs', () => {
+    expect(bestCheckLabel([])).toBeNull();
+  });
+});
 
 describe('generateSuggestions', () => {
   const palette = [
