@@ -9,6 +9,7 @@ import { clearWip } from '../state/persistence.js';
 import { initDuplicateResolver } from './duplicate-resolver.js';
 import { trapFocus } from '../lib/focus-trap.js';
 import { chevronUp, chevronDown, close } from '../lib/icons.js';
+import { initColorAutosuggest } from './color-autosuggest.js';
 
 export function initPaletteEditor(store) {
   const input = document.getElementById('color-input');
@@ -68,6 +69,7 @@ export function initPaletteEditor(store) {
         existingLabel: existing.displayLabel,
       });
       input.value = '';
+      input.dispatchEvent(new Event('input'));
       showValidation('', false);
       return;
     }
@@ -84,6 +86,8 @@ export function initPaletteEditor(store) {
     });
 
     input.value = '';
+    // Fire input so the live preview clears and the autosuggest list closes.
+    input.dispatchEvent(new Event('input'));
     showValidation('', false);
     input.focus();
   }
@@ -133,9 +137,9 @@ export function initPaletteEditor(store) {
   });
 
   addBtn.addEventListener('click', addColor);
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') addColor();
-  });
+  // Enter-to-add is handled by the autosuggest so it can intercept Enter when a
+  // suggestion is highlighted; it calls addColor otherwise.
+  initColorAutosuggest(input, { onSubmit: addColor });
 
   // Native colour picker: on commit, feed the chosen hex through the same path
   // as a typed value so it previews and auto-adds, mirroring the eyedropper.

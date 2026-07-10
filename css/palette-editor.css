@@ -5,13 +5,67 @@
   flex-wrap: wrap;
 }
 
-/* The text field grows and the Add button sits beside it on the same line. */
+/* The text field grows and the Add button sits beside it on the same line.
+   Relative so the autosuggest popover anchors to the input. */
 .palette-input-row .form-group {
   flex: 1 1 12rem;
+  position: relative;
 }
 
 .palette-input-row .form-input {
   width: 100%;
+}
+
+/* === Next-character hex autosuggest === */
+.autosuggest-list {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  margin: 0;
+  padding: var(--space-xs);
+  list-style: none;
+  max-height: 15rem;
+  overflow-y: auto;
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.autosuggest-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius);
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.autosuggest-option.is-active,
+.autosuggest-option:hover {
+  background: var(--surface-bg);
+}
+
+.autosuggest-swatch {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  border: 1px solid var(--border-color);
+}
+
+/* Steps that aren't a valid hex length yet (2 and 5 digits) have no color to
+   preview, so the swatch is an empty placeholder. */
+.autosuggest-swatch-empty {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 3px,
+      var(--border-color) 3px 4px
+    );
 }
 
 /* The picker and eyedropper add colours on their own, so they get their own
