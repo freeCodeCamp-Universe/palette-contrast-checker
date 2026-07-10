@@ -91,12 +91,22 @@ describe('palette editor — native color picker', () => {
     expect(palette[0].hex).toBe('#ff0080');
   });
 
-  it('has an accessible label associated with the picker', () => {
+  it('gives every input method a visible text label', () => {
     const picker = document.getElementById('color-picker');
-    const label = document.querySelector('label[for="color-picker"]');
     expect(picker.type).toBe('color');
-    expect(label).not.toBeNull();
-    expect(label.textContent.trim()).toBe('Pick a color');
+
+    const labels = {
+      'color-input': 'Add a color',
+      'color-picker': 'Color picker',
+      'eyedropper-btn': 'Screen picker',
+    };
+    for (const [id, text] of Object.entries(labels)) {
+      const label = document.querySelector(`label[for="${id}"]`);
+      expect(label, `${id} should have an associated label`).not.toBeNull();
+      expect(label.textContent.trim()).toBe(text);
+      // A visible caption, not a screen-reader-only one.
+      expect(label.classList.contains('sr-only')).toBe(false);
+    }
   });
 });
 

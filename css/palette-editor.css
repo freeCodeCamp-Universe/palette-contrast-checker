@@ -16,18 +16,32 @@
 .palette-input-buttons {
   display: flex;
   gap: var(--space-sm);
-  align-items: stretch;
+  /* Bottom-align so the Add button (no caption) lines up with the captioned
+     picker controls below their labels. */
+  align-items: flex-end;
+}
+
+/* A control paired with a caption above it, mirroring the form-group label
+   style so the picker and eyedropper read like the "Add a color" field. */
+.picker-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.picker-group label {
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 /* Native colour picker rendered as a clean swatch that lines up with the
    adjacent buttons. The browser default has thick chrome and padding, so the
    inner swatch pseudo-elements are reset to fill the control. */
-.color-picker-wrap {
-  display: inline-flex;
-}
-
 #color-picker {
-  width: 44px;
+  width: 48px;
+  height: 40px;
   padding: 2px;
   background: var(--surface-bg);
   border: 1px solid var(--border-color);
@@ -36,6 +50,13 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+}
+
+/* Match the swatch height so both captions sit on the same line. */
+#eyedropper-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-color);
 }
 
 #color-picker::-webkit-color-swatch-wrapper {
