@@ -72,6 +72,34 @@ describe('palette editor — SVG icons (no emoji)', () => {
   });
 });
 
+describe('palette editor — native color picker', () => {
+  beforeEach(() => {
+    loadAppDom();
+    resetLocalStorage();
+  });
+
+  it('adds the picked color to the palette on change', () => {
+    const store = makeStore();
+    initPaletteEditor(store);
+
+    const picker = document.getElementById('color-picker');
+    picker.value = '#ff0080';
+    picker.dispatchEvent(new window.Event('change'));
+
+    const palette = store.getState().palette;
+    expect(palette).toHaveLength(1);
+    expect(palette[0].hex).toBe('#ff0080');
+  });
+
+  it('has an accessible label associated with the picker', () => {
+    const picker = document.getElementById('color-picker');
+    const label = document.querySelector('label[for="color-picker"]');
+    expect(picker.type).toBe('color');
+    expect(label).not.toBeNull();
+    expect(label.textContent.trim()).toBe('Pick a color');
+  });
+});
+
 describe('palette editor — Clear all', () => {
   beforeEach(() => {
     loadAppDom();

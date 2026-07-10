@@ -13,6 +13,7 @@ import { chevronUp, chevronDown, close } from '../lib/icons.js';
 export function initPaletteEditor(store) {
   const input = document.getElementById('color-input');
   const addBtn = document.getElementById('add-color-btn');
+  const colorPicker = document.getElementById('color-picker');
   const eyedropperBtn = document.getElementById('eyedropper-btn');
   const paletteList = document.getElementById('palette-list');
   const paletteCount = document.getElementById('palette-count');
@@ -134,6 +135,14 @@ export function initPaletteEditor(store) {
   addBtn.addEventListener('click', addColor);
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') addColor();
+  });
+
+  // Native colour picker: on commit, feed the chosen hex through the same path
+  // as a typed value so it previews and auto-adds, mirroring the eyedropper.
+  colorPicker.addEventListener('change', () => {
+    input.value = colorPicker.value;
+    input.dispatchEvent(new Event('input'));
+    addColor();
   });
 
   // EyeDropper
