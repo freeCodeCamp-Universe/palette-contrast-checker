@@ -96,7 +96,7 @@ describe('palette editor — native color picker', () => {
     expect(picker.type).toBe('color');
 
     const labels = {
-      'color-input': 'Add a color',
+      'color-input': 'Write a color in any format',
       'color-picker': 'Color picker',
       'eyedropper-btn': 'Screen picker',
     };

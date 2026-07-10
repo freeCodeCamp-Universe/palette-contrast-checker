@@ -37,6 +37,14 @@ describe('parseColor', () => {
       expect(parseColor('rgba(255, 0, 0, 0.5)')).toEqual({ r: 255, g: 0, b: 0 });
     });
 
+    it('parses space-separated rgb()', () => {
+      expect(parseColor('rgb(255 0 128)')).toEqual({ r: 255, g: 0, b: 128 });
+    });
+
+    it('parses slash-alpha rgb() (ignores alpha)', () => {
+      expect(parseColor('rgb(255 0 128 / 0.5)')).toEqual({ r: 255, g: 0, b: 128 });
+    });
+
     it('rejects out-of-range values', () => {
       expect(parseColor('rgb(256, 0, 0)')).toBeNull();
     });
@@ -51,6 +59,10 @@ describe('parseColor', () => {
     it('parses hsla() (ignores alpha)', () => {
       const result = parseColor('hsla(0, 100%, 50%, 0.5)');
       expect(result).toEqual({ r: 255, g: 0, b: 0 });
+    });
+
+    it('parses space-separated hsl() with slash alpha', () => {
+      expect(parseColor('hsl(0 100% 50% / .5)')).toEqual({ r: 255, g: 0, b: 0 });
     });
 
     it('rejects hue > 360', () => {
