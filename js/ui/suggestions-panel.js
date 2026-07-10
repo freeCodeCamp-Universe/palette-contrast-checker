@@ -37,7 +37,7 @@ export function initSuggestionsPanel(store) {
       // The grid is two columns; span the note across both so it sits as a
       // full-width banner above them rather than in a single cell.
       note.style.gridColumn = '1 / -1';
-      note.innerHTML = `${info}<span>None of your colors is dark or light enough to reach 7:1 (AAA). Add at least one light and one dark color, then regenerate suggestions.</span>`;
+      note.innerHTML = `${info}<span>None of your colors is dark or light enough to reach 7:1 (AAA). Add at least one light and one dark color, then run Analyze Palette again.</span>`;
       grid.appendChild(note);
     }
 
