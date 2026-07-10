@@ -3,7 +3,8 @@
  */
 
 import { generateId } from '../state/actions.js';
-import { generateSuggestions, bestCheckLabel } from '../lib/suggestions.js';
+import { generateSuggestions, bestCheckLabel, isAAAUnreachable } from '../lib/suggestions.js';
+import { info } from '../lib/icons.js';
 
 export function initSuggestionsPanel(store) {
   const section = document.getElementById('suggestions-section');
@@ -25,6 +26,20 @@ export function initSuggestionsPanel(store) {
     grid.innerHTML = '';
     selected.clear();
     addBtn.setAttribute('aria-disabled', 'true');
+
+    // Explain a mathematically empty AAA slot: when every palette color is
+    // mid-luminance, no single added color can form a 7:1 pair, so none of the
+    // suggestions below will ever carry an AAA badge. Shown above the columns
+    // whether they hold AA suggestions or nothing at all.
+    if (isAAAUnreachable(palette)) {
+      const note = document.createElement('div');
+      note.className = 'alert alert-info';
+      // The grid is two columns; span the note across both so it sits as a
+      // full-width banner above them rather than in a single cell.
+      note.style.gridColumn = '1 / -1';
+      note.innerHTML = `${info}<span>None of your colors is dark or light enough to reach 7:1 (AAA). Add at least one light and one dark color, then regenerate suggestions.</span>`;
+      grid.appendChild(note);
+    }
 
     // When nothing qualifies at all, show a single message instead of two
     // empty columns.

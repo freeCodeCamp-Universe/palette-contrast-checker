@@ -3,6 +3,7 @@ import {
   generateSuggestions,
   bestCheckLabel,
   smallestMissingThreshold,
+  isAAAUnreachable,
 } from '../../js/lib/suggestions.js';
 import { hexToRgb } from '../../js/lib/color-convert.js';
 
@@ -52,6 +53,31 @@ describe('coverage filter', () => {
     const result = generateSuggestions([{ hex: '#000000' }, { hex: '#ffffff' }]);
     expect(result.dark).toHaveLength(0);
     expect(result.light).toHaveLength(0);
+  });
+});
+
+describe('isAAAUnreachable', () => {
+  it('is true when every color is mid-luminance (no single added color reaches 7:1)', () => {
+    // #dd0203 (Y≈0.154) and #5966f5 (Y≈0.182) both sit in the 0.10–0.30 band.
+    expect(isAAAUnreachable([{ hex: '#dd0203' }, { hex: '#5966f5' }])).toBe(true);
+  });
+
+  it('is false when a dark-enough color is present (a near-white partner reaches 7:1)', () => {
+    // #191970 (Y≈0.021) can pair with a light color for AAA.
+    expect(isAAAUnreachable([{ hex: '#dd0203' }, { hex: '#5966f5' }, { hex: '#191970' }])).toBe(false);
+  });
+
+  it('is false when a light-enough color is present', () => {
+    expect(isAAAUnreachable([{ hex: '#808080' }, { hex: '#ffffff' }])).toBe(false);
+  });
+
+  it('treats the 0.10 / 0.30 boundaries as reachable (exclusive band)', () => {
+    // Pure black and white are the extremes — always reachable.
+    expect(isAAAUnreachable([{ hex: '#000000' }, { hex: '#ffffff' }])).toBe(false);
+  });
+
+  it('is false for an empty palette', () => {
+    expect(isAAAUnreachable([])).toBe(false);
   });
 });
 

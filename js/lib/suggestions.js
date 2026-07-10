@@ -7,7 +7,7 @@
  */
 
 import { hexToRgb, rgbToHex, rgbToHsl, hslToRgb } from './color-convert.js';
-import { contrastRatio, classifyContrast } from './contrast.js';
+import { contrastRatio, classifyContrast, relativeLuminance } from './contrast.js';
 
 const DARK_NEUTRALS = [
   '#1a1a2e', '#16213e', '#0f3460', '#2c2c54',
@@ -47,6 +47,23 @@ export function smallestMissingThreshold(paletteRgbs) {
     }
   }
   return LEVELS.find((t) => maxRatio < t) ?? Infinity;
+}
+
+// A single added color can form a 7:1 pair (AAA normal text) with an existing
+// color only if that color's relative luminance leaves room for an extreme
+// partner: low enough for a near-white one (Y <= 0.10, since 1.05/(0.10+0.05)
+// = 7) or high enough for a near-black one (Y >= 0.30, since 20*0.30+1 = 7).
+// If every palette color sits in the mid-band between those bounds, no single
+// added color reaches AAA — only adding both a light and a dark color, which
+// contrast with each other, can. (3:1 and 4.5:1 are always reachable with one
+// color, so AAA is the only level that can be unreachable this way.)
+export function isAAAUnreachable(palette) {
+  if (palette.length === 0) return false;
+  return palette.every((c) => {
+    const { r, g, b } = hexToRgb(c.hex);
+    const y = relativeLuminance(r, g, b);
+    return y > 0.1 && y < 0.3;
+  });
 }
 
 export function generateSuggestions(palette) {
