@@ -5,20 +5,22 @@
   flex-wrap: wrap;
 }
 
+/* The text field grows and the Add button sits beside it on the same line. */
 .palette-input-row .form-group {
-  flex: 1 1 100%;
+  flex: 1 1 12rem;
 }
 
 .palette-input-row .form-input {
   width: 100%;
 }
 
-.palette-input-buttons {
+/* The picker and eyedropper add colours on their own, so they get their own
+   row below the type-and-Add field. */
+.palette-pickers {
   display: flex;
-  gap: var(--space-sm);
-  /* Bottom-align so the Add button (no caption) lines up with the captioned
-     picker controls below their labels. */
+  gap: var(--space-md);
   align-items: flex-end;
+  margin-top: var(--space-sm);
 }
 
 /* A control paired with a caption above it, mirroring the form-group label
