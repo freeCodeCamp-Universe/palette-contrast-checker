@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { loadAppDom, resetLocalStorage } from '../helpers/dom.js';
 import { initApp, getStore } from '../../js/ui/app.js';
-import { saveWip } from '../../js/state/persistence.js';
+import { saveWip, saveNamedPalette } from '../../js/state/persistence.js';
 
 describe('app bootstrap — loading a #p= palette', () => {
   beforeEach(() => {
@@ -72,5 +72,29 @@ describe('app bootstrap — Load/Restore only fill colors', () => {
     const store = getStore();
     store.dispatch({ type: 'ADD_COLOR', payload: { id: '1', hex: '#123456', displayLabel: '#123456' } });
     expect(window.location.hash).toBe('');
+  });
+});
+
+describe('app bootstrap — opening a saved palette', () => {
+  beforeEach(() => {
+    loadAppDom();
+    resetLocalStorage();
+    history.replaceState(null, '', '/');
+  });
+
+  it('analyzes immediately and writes the URL when a saved palette is opened', async () => {
+    saveNamedPalette('Ocean', [
+      { id: '1', hex: '#000000', displayLabel: '#000000' },
+      { id: '2', hex: '#ffffff', displayLabel: '#ffffff' },
+    ]);
+    initApp();
+
+    document.getElementById('load-palette-btn').click(); // render the saved list
+    document.querySelector('#saved-palettes-list .load-btn').click(); // Open
+
+    expect(getStore().getState().palette).toHaveLength(2);
+    await vi.waitFor(() => expect(getStore().getState().results).not.toBeNull());
+    expect(getStore().getState().results.length).toBeGreaterThan(0);
+    expect(window.location.hash).toBe('#p=000000,ffffff');
   });
 });

@@ -164,7 +164,7 @@ export function initStoragePanel(store) {
           <div class="saved-palette-swatches" aria-hidden="true">${swatches}</div>
         </div>
         <div class="flex-center">
-          <button class="btn btn-sm btn-primary load-btn">Load</button>
+          <button class="btn btn-sm btn-primary load-btn">Open</button>
           <button class="btn btn-sm btn-danger delete-btn">Delete</button>
         </div>
       `;
@@ -173,7 +173,15 @@ export function initStoragePanel(store) {
         const colors = loadNamedPalette(p.name);
         if (colors) {
           store.dispatch({ type: 'LOAD_PALETTE', payload: colors });
-          showStatus(`Palette "${p.name}" loaded.`);
+          showStatus(`Palette "${p.name}" opened.`);
+          // Analyze immediately so the comparison shows without a second click,
+          // and so the URL hash updates to the analyzed palette — matching how a
+          // shared #p= link behaves. The Analyze handler enforces the minimum-
+          // and >10-color rules, so we just delegate when it's enabled.
+          const analyzeBtn = document.getElementById('analyze-btn');
+          if (analyzeBtn && analyzeBtn.getAttribute('aria-disabled') !== 'true') {
+            analyzeBtn.click();
+          }
         }
         loadDialog.hidden = true;
       });

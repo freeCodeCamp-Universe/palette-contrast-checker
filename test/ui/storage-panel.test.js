@@ -129,7 +129,7 @@ describe('storage panel — save/load/delete feedback', () => {
     expect(status.textContent.toLowerCase()).toContain('saved');
   });
 
-  it('announces a load in the status live region', () => {
+  it('announces an open in the status live region', () => {
     saveNamedPalette('Ocean', [{ id: '1', hex: '#000000', displayLabel: '#000000' }]);
     const store = makeStore();
     initStoragePanel(store);
@@ -137,7 +137,16 @@ describe('storage panel — save/load/delete feedback', () => {
     document.getElementById('load-palette-btn').click(); // render list
     document.querySelector('#saved-palettes-list .load-btn').click();
 
-    expect(document.getElementById('storage-status').textContent.toLowerCase()).toContain('loaded');
+    expect(document.getElementById('storage-status').textContent.toLowerCase()).toContain('opened');
+  });
+
+  it('labels the open button "Open" (not "Load")', () => {
+    saveNamedPalette('Ocean', [{ id: '1', hex: '#000000', displayLabel: '#000000' }]);
+    const store = makeStore();
+    initStoragePanel(store);
+
+    document.getElementById('load-palette-btn').click();
+    expect(document.querySelector('#saved-palettes-list .load-btn').textContent).toBe('Open');
   });
 
   it('announces a delete in the status live region', () => {
