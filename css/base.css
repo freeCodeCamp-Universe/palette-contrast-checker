@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&family=Lato:wght@300;400;700&display=swap');
 
 *,
 *::before,
@@ -46,6 +46,7 @@ a:hover {
 :focus-visible {
   outline: 2px solid var(--focus-outline);
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-contrast);
 }
 
 @media (prefers-reduced-motion: reduce) {

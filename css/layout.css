@@ -2,10 +2,17 @@
   background: var(--primary-bg);
   border-bottom: 1px solid var(--border-color);
   padding: var(--space-sm) var(--space-lg);
-  height: var(--header-height);
+  min-height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+@media (max-width: 500px) {
+  .app-header {
+    gap: var(--space-sm);
+    padding-inline: var(--space-sm);
+  }
 }
 
 .app-header h1 {

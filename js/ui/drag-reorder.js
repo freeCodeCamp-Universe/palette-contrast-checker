@@ -33,10 +33,10 @@ export function initDragReorder(store) {
     const rect = target.getBoundingClientRect();
     const midY = rect.top + rect.height / 2;
     if (e.clientY < midY) {
-      target.style.borderTop = '2px solid var(--color-cta)';
+      target.style.borderTop = '2px solid var(--selection-border)';
       target.style.borderBottom = '';
     } else {
-      target.style.borderBottom = '2px solid var(--color-cta)';
+      target.style.borderBottom = '2px solid var(--selection-border)';
       target.style.borderTop = '';
     }
   });

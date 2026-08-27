@@ -10,9 +10,8 @@
 }
 
 .suggestion-item {
-  /* Anchor for the absolutely-positioned .suggestion-best badge. */
-  position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm);
@@ -24,9 +23,9 @@
 }
 
 .suggestion-best {
-  position: absolute;
-  top: var(--space-sm);
-  right: var(--space-sm);
+  grid-column: 1 / -1;
+  justify-self: start;
+  max-width: 100%;
 }
 
 .suggestion-item:hover {
@@ -34,12 +33,12 @@
 }
 
 .suggestion-item.selected {
-  border-color: var(--color-cta);
+  border-color: var(--selection-border);
   background: var(--primary-bg);
 }
 
 .suggestion-item input[type="checkbox"] {
-  accent-color: var(--color-cta);
+  accent-color: var(--selection-border);
   flex-shrink: 0;
 }
 
@@ -54,16 +53,16 @@
 
 .suggestion-hex {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .suggestion-type {
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: var(--text-muted);
 }
 
 .suggestion-pairs {
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: var(--text-muted);
 }
 
@@ -71,4 +70,11 @@
   margin-top: var(--space-md);
   display: flex;
   gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 700px) {
+  .suggestions-grid {
+    grid-template-columns: 1fr;
+  }
 }
