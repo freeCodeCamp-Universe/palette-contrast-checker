@@ -10,9 +10,8 @@
 }
 
 .suggestion-item {
-  /* Anchor for the absolutely-positioned .suggestion-best badge. */
-  position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm);
@@ -24,9 +23,9 @@
 }
 
 .suggestion-best {
-  position: absolute;
-  top: var(--space-sm);
-  right: var(--space-sm);
+  grid-column: 1 / -1;
+  justify-self: start;
+  max-width: 100%;
 }
 
 .suggestion-item:hover {

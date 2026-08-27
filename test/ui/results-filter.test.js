@@ -1,16 +1,37 @@
-import { describe, it, expect } from 'vitest';
-import { readableTextColor } from '../../js/ui/results-filter.js';
+// @vitest-environment jsdom
+import { beforeEach, describe, expect, it } from 'vitest';
+import { loadAppDom, resetLocalStorage } from '../helpers/dom.js';
+import { createStore } from '../../js/state/store.js';
+import { getInitialState, reducer } from '../../js/state/actions.js';
+import { initResultsFilter } from '../../js/ui/results-filter.js';
 
-describe('readableTextColor', () => {
-  it('uses black text on light swatches', () => {
-    expect(readableTextColor('#ffffff')).toBe('#000000');
-    expect(readableTextColor('#f1be32')).toBe('#000000'); // fCC gold
-    expect(readableTextColor('#acd157')).toBe('#000000'); // lime
+describe('result color filters', () => {
+  let store;
+
+  beforeEach(() => {
+    loadAppDom();
+    resetLocalStorage();
+    store = createStore(reducer, getInitialState());
+    initResultsFilter(store);
   });
 
-  it('uses white text on dark swatches', () => {
-    expect(readableTextColor('#000000')).toBe('#ffffff');
-    expect(readableTextColor('#0a0a23')).toBe('#ffffff'); // fCC navy
-    expect(readableTextColor('#5a01a7')).toBe('#ffffff'); // purple-dark
+  it('keeps option text on the semantic control surface for mid-luminance colors', () => {
+    store.dispatch({
+      type: 'LOAD_PALETTE',
+      payload: [
+        { id: '1', hex: '#777777', displayLabel: 'Mid gray' },
+        { id: '2', hex: '#888888', displayLabel: 'Lighter gray' },
+      ],
+    });
+    store.dispatch({ type: 'SET_RESULTS', payload: [{}] });
+
+    for (const id of ['filter-foreground', 'filter-background']) {
+      const options = [...document.getElementById(id).options].slice(1);
+      expect(options.map((option) => option.textContent)).toEqual(['Mid gray', 'Lighter gray']);
+      for (const option of options) {
+        expect(option.style.backgroundColor).toBe('');
+        expect(option.style.color).toBe('');
+      }
+    }
   });
 });
