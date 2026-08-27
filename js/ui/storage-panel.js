@@ -92,7 +92,7 @@ export function initStoragePanel(store) {
       overwritePreview.innerHTML = existing.colors
         .map(
           (c) =>
-            `<span class="flex-center" style="margin-bottom:4px"><span class="color-swatch" style="background:${c.hex};width:16px;height:16px"></span> <span class="mono" style="font-size:0.85rem">${c.displayLabel || c.hex}</span></span>`
+            `<span class="flex-center" style="margin-bottom:4px"><span class="color-swatch" style="background:${c.hex};width:16px;height:16px"></span> <span class="mono">${c.displayLabel || c.hex}</span></span>`
         )
         .join('');
       overwriteModal.hidden = false;

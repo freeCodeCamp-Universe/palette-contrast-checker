@@ -86,7 +86,7 @@
 }
 
 .picker-group label {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--text-tertiary);
   font-weight: 700;
   white-space: nowrap;
@@ -132,6 +132,7 @@
 #color-picker:focus-visible {
   outline: 2px solid var(--focus-outline);
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-contrast);
 }
 
 .palette-list {
@@ -163,13 +164,13 @@
 
 .palette-item-label {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--text-primary);
 }
 
 .palette-item-hex {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: var(--text-muted);
 }
 
@@ -188,7 +189,7 @@
 }
 
 .palette-count {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: var(--text-muted);
 }
 
@@ -202,6 +203,6 @@
   align-items: center;
   gap: var(--space-sm);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: var(--text-muted);
 }

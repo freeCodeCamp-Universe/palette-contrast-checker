@@ -22,12 +22,12 @@
 
 .results-toolbar select,
 .results-toolbar .form-input {
-  font-size: 0.85rem;
+  font-size: 1rem;
   padding: var(--space-xs) var(--space-sm);
 }
 
 .results-count {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: var(--text-muted);
   margin-left: auto;
 }
@@ -43,7 +43,7 @@
 }
 
 .results-disclosure h3 {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--text-tertiary);
   margin-bottom: var(--space-sm);
 }
@@ -71,7 +71,7 @@
   align-items: center;
   gap: var(--space-sm);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 1rem;
   flex-wrap: wrap;
   overflow-wrap: anywhere;
 }
@@ -104,4 +104,3 @@
   margin: 0;
   padding: 0;
 }
-
