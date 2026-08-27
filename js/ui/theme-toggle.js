@@ -32,7 +32,7 @@ export function initThemeToggle(store) {
       const next = theme === 'dark' ? 'light' : 'dark';
       btn.setAttribute('aria-checked', String(theme === 'light'));
       btn.title = `Switch to ${next} mode`;
-      btn.setAttribute('aria-label', `Switch to ${next} mode`);
+      btn.setAttribute('aria-label', 'Light mode');
       // Which sun/moon icon shows is handled by CSS via data-theme.
     }
   };
